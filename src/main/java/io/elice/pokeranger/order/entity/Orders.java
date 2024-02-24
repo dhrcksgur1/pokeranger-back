@@ -4,6 +4,7 @@ import io.elice.pokeranger.order.deliverystate.DeliveryStateRole;
 import io.elice.pokeranger.orderItem.entity.OrderItem;
 import io.elice.pokeranger.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,5 +42,11 @@ public class Orders {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> Items = new ArrayList<>();
 
+    public Orders(String orderMessage, int totalCost, User user) {
+        this.orderMessage = orderMessage;
+        this.totalCost = totalCost;
+        this.user = user;
+        this.deliveryState = DeliveryStateRole.PREPARE;
+    }
 
 }
