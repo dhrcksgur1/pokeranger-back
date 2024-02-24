@@ -1,12 +1,11 @@
 package io.elice.pokeranger.prodcut.mapper;
 
+import io.elice.pokeranger.prodcut.entity.Product;
+import io.elice.pokeranger.prodcut.entity.ProductDto;
+import org.mapstruct.Mapper;
+
 //@Mapper(componentModel = "spring")
-//public interface ProductMapper<ProductDTO> {
-//    io.elice.shoppingmall.user.mapper.UserMapper INSTANCE = Mappers.getMapper(io.elice.shoppingmall.user.mapper.UserMapper.class);
-//
-//    @Mapping(target = "createdAt", ignore = true)
-//    @Mapping(target = "updatedAt", ignore = true)
-//    Product productDTOToProduct(ProductDTO productDTODTO);
-//
-//    ProductDTO productToProductDTO(Product product);
+//public interface ProductMapper {
+//    Product dtoToProduct(ProductDto productDto);
+//    ProductDto productToDto(Product product);
 //}
