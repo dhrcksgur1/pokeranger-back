@@ -12,4 +12,5 @@ public class ProductDto {
     private Long price;
     private Long stock;
     private String Description;
+    private String images;
 }

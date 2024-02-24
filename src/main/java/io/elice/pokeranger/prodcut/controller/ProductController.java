@@ -2,6 +2,7 @@ package io.elice.pokeranger.prodcut.controller;
 
 
 import io.elice.pokeranger.prodcut.entity.Product;
+import io.elice.pokeranger.prodcut.entity.ProductDto;
 import io.elice.pokeranger.prodcut.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,12 @@ public class ProductController {
     public Product createProduct(@RequestBody Product product){
         return productService.save(product);
     }
-
+    //create Dto로 받기 시도 > 오류 발생
+//    @PostMapping
+//    public ResponseEntity<Product> createProduct(@RequestBody ProductDto productDto) {
+//        Product savedProduct = productService.save(productDto);
+//        return ResponseEntity.ok(savedProduct);
+//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
@@ -48,6 +54,8 @@ public class ProductController {
                     product.setName(productDetails.getName());
                     product.setDescription(productDetails.getDescription());
                     product.setPrice(productDetails.getPrice());
+                    product.setStock(productDetails.getStock());
+                    product.setImages(productDetails.getImages());
                     Product updatedProduct = productService.save(product);
                     return ResponseEntity.ok(updatedProduct);
                 })
