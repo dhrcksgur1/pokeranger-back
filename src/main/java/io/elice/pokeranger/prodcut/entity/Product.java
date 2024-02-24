@@ -36,8 +36,8 @@ public class Product {
     @Column
     private String images;
 
-    public Product(String name, String description, Long price, Long stock) {
-    }
+//    public Product(String name, String description, Long price, Long stock) {
+//    }
 
     //생성일자 java.sql.SQLIntegrityConstraintViolationException: Column 'created_at' cannot be null발생합니다.
 //    @CreatedDate

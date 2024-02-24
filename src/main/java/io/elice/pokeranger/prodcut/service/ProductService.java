@@ -2,6 +2,7 @@ package io.elice.pokeranger.prodcut.service;
 
 import io.elice.pokeranger.prodcut.entity.Product;
 import io.elice.pokeranger.prodcut.entity.ProductDto;
+import io.elice.pokeranger.prodcut.mapper.ProductMapper;
 import io.elice.pokeranger.prodcut.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,12 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository,ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     public List<Product> findAllProducts(){
@@ -28,18 +31,21 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+    //create 엔티티
     public Product save(Product product) {
         return productRepository.save(product);
     }
 
-    //create 에러발생(엔티티가 아닌 DTO로 받기위해 수정중, @getter가 있음에도 오류발생 이유를 모르겠습니다.)
-//    public Product save(ProductDto productDto) {
-//        Product product = new Product(
-//                productDto.getName(),
-//                productDto.getDescription(),
-//                productDto.getPrice(),
-//                productDto.getStock()
-//        );
+    //create dto
+    public ProductDto createProduct(ProductDto productDto) {
+        Product product = productMapper.dtoToProduct(productDto);
+        Product savedProduct = productRepository.save(product);
+        return productMapper.productToDto(savedProduct);
+    }
+
+//    오류발생
+//    public ProductDto createProduct(ProductDto productDto) {
+//        Product product = productMapper.dtoToProduct(productDto);
 //        return productRepository.save(product);
 //    }
 
