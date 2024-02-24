@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("order")
+@RequestMapping("/order")
 public class OrderController {
 
     private final OrderService orderService;
@@ -25,12 +25,12 @@ public class OrderController {
         OrderResponseDTO orderResponseDTO = orderService.createOrder(orderRequestDTO);
         return new ResponseEntity<>(orderResponseDTO, HttpStatus.CREATED);
     }
-    // 유저 주문조회 페이지
-    // 유저 주문조회 페이지 주문 취소
-    // 관리자 주문조회 페이지
-    // 관리자 주문상태 변경
-    //
 
+    // 유저 주문조회 페이지
+    // 유저 주문조회 페이지 주문 취소 기능
+    // 관리자 주문조회 페이지
+    // 관리자 주문조회 페이지 주문상태 변경 기능
+    // 관리자 주문조회 페이지 주문 취소 기능
 
 
 }
