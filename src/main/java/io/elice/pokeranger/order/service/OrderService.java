@@ -12,8 +12,14 @@ import io.elice.pokeranger.prodcut.entity.Product;
 import io.elice.pokeranger.prodcut.repository.ProductRepository;
 import io.elice.pokeranger.user.entity.User;
 import io.elice.pokeranger.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,15 +31,18 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final OrderMapper orderMapper;
 
-    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO){
-        User user = userRepository.findById(orderRequestDTO.getUserId()).orElse(null);
+    @Transactional
+    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
+        User user = userRepository.findById(orderRequestDTO.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Orders order = new Orders(
                 orderRequestDTO.getOrderMessage(),
                 orderRequestDTO.getTotalCost(),
                 user
         );
         for (CartItemDTO cartItem : orderRequestDTO.getCartItems()) {
-            Product product = productRepository.findById(cartItem.getProductId()).orElse(null);
+            Product product = productRepository.findById(cartItem.getProductId())
+                    .orElseThrow(() -> new EntityNotFoundException("Product not found"));
             if (product != null) {
                 OrderItem orderItem = new OrderItem(product, order, cartItem.getQuantity());
                 order.getItems().add(orderItem);
@@ -41,5 +50,38 @@ public class OrderService {
         }
         orderRepository.save(order);
         return orderMapper.OrderToOrderResponseDTO(order);
+    }
+
+    public List<OrderResponseDTO> getOrderList(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        List<Orders> orders;
+        // 유저 rols 추가시 변경
+        if (false/*user.getRols() == USER*/ ){
+        }else {
+            orders = orderRepository.findByUserId(userId);
+        }
+
+        List<OrderResponseDTO> orderResponseDTOs = orders.stream().map(order -> {
+            OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+            orderResponseDTO.setOrderDate(order.getOrderDate());
+            orderResponseDTO.setDeliveryState(order.getDeliveryState());
+            orderResponseDTO.setTotalCost(order.getTotalCost());
+
+            List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getId());
+
+            List<CartItemDTO> cartItemDTOs = orderItems.stream().map(item -> {
+                CartItemDTO cartItemDTO = new CartItemDTO();
+                cartItemDTO.setProductId(item.getProduct().getId());
+                cartItemDTO.setQuantity(item.getQuantity());
+                return cartItemDTO;
+            }).collect(Collectors.toList());
+
+            orderResponseDTO.setCartItems(cartItemDTOs);
+
+            return orderResponseDTO;
+        }).collect(Collectors.toList());
+
+        return orderResponseDTOs;
     }
 }

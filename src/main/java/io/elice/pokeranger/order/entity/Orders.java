@@ -40,7 +40,7 @@ public class Orders {
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> Items = new ArrayList<>();
+    private List<OrderItem> items = new ArrayList<>();
 
     public Orders(String orderMessage, int totalCost, User user) {
         this.orderMessage = orderMessage;
