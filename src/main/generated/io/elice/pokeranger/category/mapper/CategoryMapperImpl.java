@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-02-23T20:52:07+0900",
+    date = "2024-02-27T20:58:13+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -19,9 +19,11 @@ public class CategoryMapperImpl implements CategoryMapper {
             return null;
         }
 
-        Category category = new Category();
+        String name = null;
 
-        category.setName( categoryDTO.getName() );
+        name = categoryDTO.getName();
+
+        Category category = new Category( name );
 
         return category;
     }

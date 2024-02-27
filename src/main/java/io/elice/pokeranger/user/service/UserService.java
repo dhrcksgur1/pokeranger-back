@@ -12,15 +12,19 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
+    private UserMapper userMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    public UserService(UserRepository userRepository, UserMapper userMapper)
+    {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
     public UserDTO createUser(UserDTO userDTO) {
         User user = userMapper.userDTOToUser(userDTO);
-        // Perform validation or other business logic if needed
+
         userRepository.save(user);
         return userMapper.userToUserDTO(user);
     }
@@ -30,6 +34,24 @@ public class UserService {
         return optionalUser.map(userMapper::userToUserDTO).orElse(null);
     }
 
-    // Other CRUD methods...
+    public UserDTO updateUser(Long userId, UserDTO userDTO) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        return optionalUser.map(user -> {
+            // Update user fields with values from userDTO
+            user.setName(userDTO.getName());
+            user.setEmail(userDTO.getEmail());
+            user.setAddress(userDTO.getAddress());
+            user.setType(userDTO.getType());
+            user.setPhoneNumber(userDTO.getPhoneNumber());
+            user.setPasswordHash(userDTO.getPasswordHash());
+
+            userRepository.save(user);
+            return userMapper.userToUserDTO(user);
+        }).orElse(null);
+    }
+
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
+    }
 
 }

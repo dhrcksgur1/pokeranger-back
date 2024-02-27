@@ -1,6 +1,6 @@
 package io.elice.pokeranger.user.entity;
 
-import io.elice.pokeranger.prodcut.entity.Product;
+import io.elice.pokeranger.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,17 +11,32 @@ import java.util.Date;
 
 @Entity
 @Data
+@Table(name = "User")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(nullable = false, unique = true)
+    private Long  id;
 
-    private String username;
-
-    private String password;
-
+    @Column(nullable = false, length = 100)
     private String email;
+
+    @Column(nullable = false, length = 255)
+    private String passwordHash;
+
+    @Column(nullable = false, length = 100)
+    private String name;
+
+    @Column(nullable = false, length = 20)
+    private String phoneNumber;
+
+    @Column(nullable = false, length = 255)
+    private String address;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserType type;
 
     @CreatedDate
     private Date createdAt;
@@ -29,6 +44,14 @@ public class User {
     @LastModifiedDate
     private Date updatedAt;
 
+    private Date deletedAt;
 
-
+    public User(UserType type, String email, String PasswordHash, String name, String PhoneNumber, String Address) {
+        this.type = type;
+        this.email = email;
+        this.passwordHash = PasswordHash;
+        this.name = name;
+        this.phoneNumber = PhoneNumber;
+        this.address = Address;
+    }
 }

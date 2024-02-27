@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-02-23T20:52:06+0900",
+    date = "2024-02-27T20:58:13+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -40,10 +40,9 @@ public class OrderMapperImpl implements OrderMapper {
 
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
 
-        if ( orders.getDeliveryState() != null ) {
-            orderResponseDTO.setDeliveryState( orders.getDeliveryState().name() );
-        }
-        orderResponseDTO.setOrderMessage( orders.getOrderMessage() );
+        orderResponseDTO.setOrderDate( orders.getOrderDate() );
+        orderResponseDTO.setDeliveryState( orders.getDeliveryState() );
+        orderResponseDTO.setTotalCost( orders.getTotalCost() );
 
         return orderResponseDTO;
     }
