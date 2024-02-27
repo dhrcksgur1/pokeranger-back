@@ -1,5 +1,6 @@
 package io.elice.pokeranger.order.service;
 
+import io.elice.pokeranger.order.deliverystate.DeliveryStateRole;
 import io.elice.pokeranger.order.entity.OrderRequestDTO;
 import io.elice.pokeranger.order.entity.OrderResponseDTO;
 import io.elice.pokeranger.order.entity.Orders;
@@ -83,5 +84,22 @@ public class OrderService {
         }).collect(Collectors.toList());
 
         return orderResponseDTOs;
+    }
+
+    @Transactional
+    public void deleteOrder(Long orderId) {
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        if (order.getDeliveryState() == DeliveryStateRole.PREPARE){
+            orderRepository.delete(order);
+        }
+
+    }
+
+    @Transactional
+    public void updateOrderState(DeliveryStateRole state, Long orderId) {
+        Orders order = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        order.setDeliveryState(state);
+        orderRepository.save(order);
     }
 }
