@@ -10,8 +10,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    public CategoryController( CategoryService categoryService)
+    {
+        this.categoryService = categoryService;
+    }
+
 
     @PostMapping
     public ResponseEntity<CategoryDTO> createUser(@RequestBody CategoryDTO categoryDTO) {
