@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ProductResponseDTO {
-    private Long id;
-    private Long userId;
     private String name;
     private Long price;
     private Long stock;

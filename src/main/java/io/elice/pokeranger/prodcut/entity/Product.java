@@ -1,5 +1,7 @@
 package io.elice.pokeranger.prodcut.entity;
 
+import io.elice.pokeranger.category.entity.Category;
+import io.elice.pokeranger.global.entity.BaseEntity;
 import io.elice.pokeranger.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Product {
+public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,6 +40,11 @@ public class Product {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    //추가
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
 
     //생성일자 java.sql.SQLIntegrityConstraintViolationException: Column 'created_at' cannot be null발생합니다.
 //    @CreatedDate
@@ -50,8 +57,9 @@ public class Product {
 //    private LocalDateTime updatedAt;
 
     //추가
-    public Product(User user, String name, Long price,Long stock,String description,String images){
+    public Product(User user,Category category ,String name, Long price,Long stock,String description,String images){
         this.user = user;
+        this.category = category;
         this.name = name;
         this.price = price;
         this.stock = stock;

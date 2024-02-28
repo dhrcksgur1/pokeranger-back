@@ -1,5 +1,7 @@
 package io.elice.pokeranger.prodcut.service;
 
+import io.elice.pokeranger.category.entity.Category;
+import io.elice.pokeranger.category.repository.CategoryRepository;
 import io.elice.pokeranger.prodcut.entity.Product;
 import io.elice.pokeranger.prodcut.entity.ProductRequestDTO;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
@@ -24,21 +26,26 @@ public class ProductService {
     private final UserService userService;
     private final UserRepository userRepository;
 
+    private final CategoryRepository categoryRepository;
+
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper, UserService userService,UserRepository userRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, UserService userService,UserRepository userRepository,CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.userService = userService;
         this.userRepository = userRepository;
+        this.categoryRepository =categoryRepository;
     }
 
     //CREATE 완성코드
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO productDto) {
         User user = userRepository.findById(productDto.getUserId()).orElse(null);
+        Category category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
 
         Product product = new Product(
                 user,
+                category,
                 productDto.getName(),
                 productDto.getPrice(),
                 productDto.getStock(),
