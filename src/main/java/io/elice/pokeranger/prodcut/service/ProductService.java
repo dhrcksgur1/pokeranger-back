@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -57,33 +58,82 @@ public class ProductService {
     }
 
 
-    public List<Product> findAllProducts(){
-        return productRepository.findAll();
+    //기존코드
+//    public List<Product> findAllProducts(){
+//        return productRepository.findAll();
+//    }
+
+    //수정코드
+    public List<ProductResponseDTO> findAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(productMapper::productToDto)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Product> findProductById(Long id) {
-        return productRepository.findById(id);
+
+    //기존코드
+//    public Optional<Product> findProductById(Long id) {
+//        return productRepository.findById(id);
+//    }
+
+    //수정코드
+    public ProductResponseDTO findProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
+        return productMapper.productToDto(product);
     }
+
 
 //    //userID로 검색(미구현)
-    public List<Product> getProductsByUserId(Long userId) {
-        return productRepository.findByUserId(userId);
+
+//    public List<Product> getProductsByUserId(Long userId) {
+//        return productRepository.findByUserId(userId);
+//    }
+
+    //수정코드
+    public List<ProductResponseDTO> getProductsByUserId(Long userId) {
+        List<Product> products = productRepository.findByUserId(userId);
+        return products.stream()
+                .map(productMapper::productToDto)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<ProductResponseDTO> getProductsByCategoryId(Long categoryId) {
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+        List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
+        for (Product product : products) {
+            productResponseDTOs.add(productMapper.productToDto(product));
+        }
+        return productResponseDTOs;
     }
 
 
     //UPDATE
-    @Transactional
-    public Product updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
+//    @Transactional//기존코드
+//    public Product updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
+//        Product product = productRepository.findById(productId)
+//                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId));
+//        product.setName(productRequestDTO.getName());
+//        product.setPrice(productRequestDTO.getPrice());
+//        product.setStock(productRequestDTO.getStock());
+//        product.setDescription(productRequestDTO.getDescription());
+//        product.setImages(productRequestDTO.getImages());
+//        return productRepository.save(product);
+//    }
+
+    @Transactional//수정코드
+    public ProductResponseDTO updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId));
-//        User user = userService.getUserById(dto.getUserId());
-//        product.setUser(user);
         product.setName(productRequestDTO.getName());
         product.setPrice(productRequestDTO.getPrice());
         product.setStock(productRequestDTO.getStock());
         product.setDescription(productRequestDTO.getDescription());
         product.setImages(productRequestDTO.getImages());
-        return productRepository.save(product);
+        Product updatedProduct = productRepository.save(product);
+        return productMapper.productToDto(updatedProduct);
     }
 
  // DELETE
@@ -91,27 +141,6 @@ public class ProductService {
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
     }
-
-    //create 엔티티
-//    @Transactional
-//    public Product save(Product product) {
-//        return productRepository.save(product);
-//    }
-
-
-    //create dto
-//    @Transactional
-//    public ProductResponseDTO createProduct(ProductResponseDTO productDto) {
-//        Product product = productMapper.dtoToProduct(productDto);
-//        Product savedProduct = productRepository.save(product);
-//        return productMapper.productToDto(savedProduct);
-//    }
-
-//    //userID가져와서 삭제 구현(미구현)
-//    @Transactional
-//    public void deleteProductById(Long id) {
-//        productRepository.deleteById(id);
-//    }
 
 
 }
