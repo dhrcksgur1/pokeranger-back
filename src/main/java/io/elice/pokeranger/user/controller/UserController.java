@@ -1,4 +1,6 @@
 package io.elice.pokeranger.user.controller;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 
 import io.elice.pokeranger.order.entity.OrderResponseDTO;
 import io.elice.pokeranger.user.entity.User;
@@ -59,6 +61,13 @@ public class UserController {
     }
 
 
+    // login
+    @PostMapping("/{userId}/{password}")
+    public ResponseEntity<UserDTO> loginUser(@PathVariable(name = "userId") long userId, @PathVariable(name = "password" ) String password) {
+        UserDTO userDTO = userService.getUserById(userId);
+        return ResponseEntity.ok(userDTO);
+    }
+
     // Update
       /*
 
@@ -74,7 +83,7 @@ public class UserController {
     // put 맵핑
 
     @PutMapping("/{userId}/roles")
-    public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUserRole(@PathVariable(name = "userId") Long userId, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(userId, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
@@ -93,9 +102,13 @@ public class UserController {
 */
     // delete 맵핑
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> deleteUser(@PathVariable(name = "userId") Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user with ID " + userId);
+        }
     }
 
 

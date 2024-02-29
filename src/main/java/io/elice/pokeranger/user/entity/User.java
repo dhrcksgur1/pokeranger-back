@@ -14,7 +14,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Table(name = "User")
-@NoArgsConstructor
 public class User {
 
     @Id
