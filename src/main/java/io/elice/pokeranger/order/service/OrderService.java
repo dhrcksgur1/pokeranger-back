@@ -14,13 +14,14 @@ import io.elice.pokeranger.prodcut.repository.ProductRepository;
 import io.elice.pokeranger.user.entity.User;
 import io.elice.pokeranger.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static io.elice.pokeranger.enums.UserType.Admin;
 
 @Service
 @RequiredArgsConstructor
@@ -58,8 +59,9 @@ public class OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         List<Orders> orders;
-        // 유저 rols 추가시 변경
-        if (false/*user.getRols() == USER*/ ){
+
+        if (user.getType() == Admin){
+            orders = orderRepository.findAll();
         }else {
             orders = orderRepository.findByUserId(userId);
         }
@@ -98,9 +100,10 @@ public class OrderService {
     }
 
     @Transactional
-    public void updateOrderState(DeliveryStateRole state, Long orderId) {
+    public OrderResponseDTO updateOrderState(DeliveryStateRole state, Long orderId) {
         Orders order = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("Order not found"));
         order.setDeliveryState(state);
         orderRepository.save(order);
+        return orderMapper.OrderToOrderResponseDTO(order);
     }
 }
