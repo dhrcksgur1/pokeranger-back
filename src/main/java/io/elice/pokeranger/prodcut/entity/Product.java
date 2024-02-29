@@ -48,30 +48,7 @@ public class Product extends BaseEntity {
         this.price = price;
         this.stock = stock;
         this.description = description;
-        this. images = images;
+        this.images = images;
     }
 
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
-//
-//    public void setPrice(Long price) {
-//        this.price = price;
-//    }
-//
-//    public void setStock(Long stock) {
-//        this.stock = stock;
-//    }
-//
-//    public void setImages(String images) {
-//        this.images = images;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user =user;
-//    }
 }

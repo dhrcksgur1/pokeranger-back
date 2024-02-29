@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class ProductService {
         this.categoryRepository =categoryRepository;
     }
 
-    //CREATE 완성코드
+    //CREATE
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO productDto) {
         User user = userRepository.findById(productDto.getUserId()).orElse(null);
@@ -58,12 +59,7 @@ public class ProductService {
     }
 
 
-    //기존코드
-//    public List<Product> findAllProducts(){
-//        return productRepository.findAll();
-//    }
-
-    //수정코드
+    //Read All Products
     public List<ProductResponseDTO> findAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
@@ -72,12 +68,7 @@ public class ProductService {
     }
 
 
-    //기존코드
-//    public Optional<Product> findProductById(Long id) {
-//        return productRepository.findById(id);
-//    }
-
-    //수정코드
+    //Read Products By Productid
     public ProductResponseDTO findProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
@@ -85,13 +76,7 @@ public class ProductService {
     }
 
 
-//    //userID로 검색(미구현)
-
-//    public List<Product> getProductsByUserId(Long userId) {
-//        return productRepository.findByUserId(userId);
-//    }
-
-    //수정코드
+    //Read Products by userID
     public List<ProductResponseDTO> getProductsByUserId(Long userId) {
         List<Product> products = productRepository.findByUserId(userId);
         return products.stream()
@@ -99,7 +84,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-
+    //Read Products by CategoryID
     public List<ProductResponseDTO> getProductsByCategoryId(Long categoryId) {
         List<Product> products = productRepository.findByCategoryId(categoryId);
         List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
@@ -111,18 +96,6 @@ public class ProductService {
 
 
     //UPDATE
-//    @Transactional//기존코드
-//    public Product updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
-//        Product product = productRepository.findById(productId)
-//                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId));
-//        product.setName(productRequestDTO.getName());
-//        product.setPrice(productRequestDTO.getPrice());
-//        product.setStock(productRequestDTO.getStock());
-//        product.setDescription(productRequestDTO.getDescription());
-//        product.setImages(productRequestDTO.getImages());
-//        return productRepository.save(product);
-//    }
-
     @Transactional//수정코드
     public ProductResponseDTO updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
         Product product = productRepository.findById(productId)
@@ -141,6 +114,29 @@ public class ProductService {
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
     }
+
+    /*기존코드
+
+    public Optional<Product> findProductById(Long id) {
+        return productRepository.findById(id);
+    }
+
+     public List<Product> getProductsByUserId(Long userId) {
+        return productRepository.findByUserId(userId);
+    }
+
+        @Transactional//기존코드
+    public Product updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId));
+        product.setName(productRequestDTO.getName());
+        product.setPrice(productRequestDTO.getPrice());
+        product.setStock(productRequestDTO.getStock());
+        product.setDescription(productRequestDTO.getDescription());
+        product.setImages(productRequestDTO.getImages());
+        return productRepository.save(product);
+    }
+     */
 
 
 }
