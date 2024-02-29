@@ -1,10 +1,7 @@
 package io.elice.pokeranger.prodcut.controller;
 
-
-import io.elice.pokeranger.prodcut.entity.Product;
 import io.elice.pokeranger.prodcut.entity.ProductRequestDTO;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
-import io.elice.pokeranger.prodcut.mapper.ProductMapper;
 import io.elice.pokeranger.prodcut.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,12 +15,10 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductMapper productMapper;
 
     @Autowired
-    public ProductController(ProductService productService,ProductMapper productMapper) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.productMapper = productMapper;
     }
 
     //CREATE
@@ -34,91 +29,81 @@ public class ProductController {
     }
 
     //Read All Products
-    @GetMapping
-    public List<Product> product(){
-        return productService.findAllProducts();
+    @GetMapping//수정코드
+    public ResponseEntity<List<ProductResponseDTO>> getProductList() {
+        List<ProductResponseDTO> products = productService.findAllProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     //Read By ProductID
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return productService.findProductById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/{id}")//수정코드
+    public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable Long id) {
+        ProductResponseDTO product = productService.findProductById(id);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
+
     //Read By UserID
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Product>> getProductsByUserId(@PathVariable Long userId) {
-        List<Product> products = productService.getProductsByUserId(userId);
+    @GetMapping("/user/{userId}")//수정코드
+    public ResponseEntity<List<ProductResponseDTO>> getProductByUserId(@PathVariable Long userId) {
+        List<ProductResponseDTO> products = productService.getProductsByUserId(userId);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+
+    //READ BY CategoryID
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<ProductResponseDTO>> getProductByCategoryId(@PathVariable Long categoryId) {
+        List<ProductResponseDTO> products = productService.getProductsByCategoryId(categoryId);
         return ResponseEntity.ok(products);
     }
 
-
     //UPADTE
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO productDto) {
-        Product updatedProduct = productService.updateProduct(id, productDto);
-        return ResponseEntity.ok(updatedProduct);
+    @PutMapping("/{id}") //수정코드
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO productRequestDTO) {
+        ProductResponseDTO updatedProduct = productService.updateProduct(id, productRequestDTO);
+        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
     //Delete
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
-        return productService.findProductById(id)
-                .map(product -> {
-                    productService.deleteProductById(id);
-                    return ResponseEntity.ok().build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProductById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    @DeleteMapping("/{id}") //version2
-//    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-//        productService.deleteProduct(id);
-//        return ResponseEntity.noContent().build();
-//    }
-
-    //Create //엔티티로
-//    @PostMapping
-//    public Product createProduct(@RequestBody Product product){
-//        return productService.save(product);
+    //기존 코드들
+    //    @GetMapping//기존코드
+//    public List<Product> getProductList(){
+//        return productService.findAllProducts();
 //    }
 
 
-    //    @PutMapping("/{id}")
-//    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
+    //    @GetMapping("/{id}")//기존코드
+//    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
 //        return productService.findProductById(id)
-//                .map(product -> {
-//                    product.setName(productDetails.getName());
-//                    product.setDescription(productDetails.getDescription());
-//                    product.setPrice(productDetails.getPrice());
-//                    product.setStock(productDetails.getStock());
-//                    product.setImages(productDetails.getImages());
-//                    Product updatedProduct = productService.save(product);
-//                    return ResponseEntity.ok(updatedProduct);
-//                })
+//                .map(ResponseEntity::ok)
 //                .orElseGet(() -> ResponseEntity.notFound().build());
 //    }
 
-    //    @PostMapping // dto로  완성코드
-//    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductResponseDTO productDto) {
-//        ProductResponseDTO createdProduct = productService.createProduct(productDto);
-//        return ResponseEntity.ok(createdProduct);
+    //    @GetMapping("/user/{userId}")//기존코드
+//    public ResponseEntity<List<Product>> getProductsByUserId(@PathVariable Long userId) {
+//        List<Product> products = productService.getProductsByUserId(userId);
+//        return ResponseEntity.ok(products);
 //    }
 
-    ////    UPDATE 오류코드
-//    @PutMapping("/{id}") //Dto 수정과 생성이 동시에 진행됩니다
-//    public ResponseEntity<ProductResponseDTO> editProduct(@PathVariable Long id, @RequestBody ProductRequestDTO productRequestDto) {
+    //    @PutMapping("/{id}") //기존코드
+//    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO productDto) {
+//        Product updatedProduct = productService.updateProduct(id, productDto);
+//        return ResponseEntity.ok(updatedProduct);
+//    }
+
+    //    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
 //        return productService.findProductById(id)
 //                .map(product -> {
-//                    product.setName(productRequestDto.getName());
-//                    product.setPrice(productRequestDto.getPrice());
-//                    product.setStock(productRequestDto.getStock());
-//                    product.setDescription(productRequestDto.getDescription());
-//                    product.setImages(productRequestDto.getImages());
-//                    ProductResponseDTO updatedProduct = productService.createProduct(productRequestDto);
-//                    return ResponseEntity.ok(updatedProduct);
+//                    productService.deleteProductById(id);
+//                    return ResponseEntity.ok().build();
 //                })
 //                .orElseGet(() -> ResponseEntity.notFound().build());
 //    }
