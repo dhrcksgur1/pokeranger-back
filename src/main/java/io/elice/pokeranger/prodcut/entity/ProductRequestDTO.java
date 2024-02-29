@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductRequestDTO {
     private Long userId;
+    private Long categoryId;
     private String name;
     private Long price;
     private Long stock;
