@@ -33,43 +33,36 @@ public class OrderController {
     }
 
     // 유저 주문내역 페이지 - 유저 아이디에 해당되는 주문 내역 반환
-    @GetMapping("/orderlist/user")
-    public ResponseEntity<List<OrderResponseDTO>> getOrderListForUser(@RequestParam Long userId){
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrderListForUser(@PathVariable Long userId){
         List<OrderResponseDTO> orderList = orderService.getOrderList(userId);
         return new ResponseEntity<>(orderList, HttpStatus.OK);
     }
 
-    // 유저 주문내역 페이지 주문 취소 기능
-    @DeleteMapping("/orderlist/user/{orderId}")
-    public ResponseEntity<Object> deleteOrderForUser(@PathVariable Long orderId){
+    // 관리자, 유저 주문내역 페이지 주문 취소 기능
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Object> deleteOrder(@PathVariable Long orderId){
         orderService.deleteOrder(orderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 관리자 주문내역 페이지 - 모든 유저의 주문 내역 반환
-    @GetMapping("/orderlist/admin")
-    public ResponseEntity<List<OrderResponseDTO>> getOrderListForAdmin(@RequestParam Long userId){
+    @GetMapping("/{userId}/admin")
+    public ResponseEntity<List<OrderResponseDTO>> getOrderListForAdmin(@PathVariable Long userId){
         List<OrderResponseDTO> orderList = orderService.getOrderList(userId);
         return new ResponseEntity<>(orderList, HttpStatus.OK);
     }
 
     // 관리자 주문내역 페이지 주문상태 변경 기능 - 주문의 id를 받아와 주문상태 변경
-    @PutMapping("/orderlist/admin/state/{orderId}")
-    public ResponseEntity<Object> changeOrderState(@RequestBody Map<String, String> body, @PathVariable Long orderId) {
+    @PatchMapping("/{orderId}")
+    public ResponseEntity<OrderResponseDTO> updateOrderState(@RequestBody Map<String, String> body, @PathVariable Long orderId) {
         try {
             DeliveryStateRole state = DeliveryStateRole.valueOf(body.get("state"));
-            orderService.updateOrderState(state, orderId);
-            return new ResponseEntity<>(HttpStatus.OK);
+            OrderResponseDTO orderResponseDTO = orderService.updateOrderState(state, orderId);
+            return new ResponseEntity<>(orderResponseDTO,HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("잘못된 주문 상태 값입니다.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
-
-    // 관리자 주문내역 페이지 주문 취소 기능
-    @DeleteMapping("/orderlist/admin/{orderId}")
-    public ResponseEntity<Object> deleteOrderForAdmin(@PathVariable Long orderId){
-        orderService.deleteOrder(orderId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
