@@ -1,6 +1,10 @@
 package io.elice.pokeranger.user.controller;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import io.elice.pokeranger.order.entity.OrderResponseDTO;
 import io.elice.pokeranger.user.entity.User;
@@ -14,13 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
-
-
-
 
     private UserService userService;
     private UserRepository userRepository;
@@ -32,8 +33,7 @@ public class UserController {
     }
 
 
-
-    // Create
+    @Operation(summary = "유저 생성 ", description = "userDTO정보로 신규 유저 추가 ")
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO createdUser = userService.createUser(userDTO);
@@ -41,19 +41,14 @@ public class UserController {
     }
 
     // Read
-    /*
-    -> 회원 전체 정보 읽어오는 API   //user 도메인
-    요청 타입 : get
-    endPoint :
-    요청명 : getUserListForAdmin
-    반환값 : ResponseEntity<List<UserDTO>>
-
-	*/
+    @Operation(summary = "전체 회원 조회 ", description = "모든 user 정보 조회  ")
     @GetMapping
     public ResponseEntity<List<User>> getUserListForAdmin() {
         List<User> users = userService.getAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    @Operation(summary = "유저 정보 요청 ", description = "id 에 해당하는 유저 반환 ")
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId) {
         UserDTO userDTO = userService.getUserById(userId);
@@ -61,27 +56,16 @@ public class UserController {
     }
 
 
-    // login
+    @Operation(summary="로그인 임시 요청" , description = "id 에 해당하는 유저 정보 반환 ")
     @PostMapping("/{userId}/{password}")
     public ResponseEntity<UserDTO> loginUser(@PathVariable(name = "userId") long userId, @PathVariable(name = "password" ) String password) {
         UserDTO userDTO = userService.getUserById(userId);
         return ResponseEntity.ok(userDTO);
     }
 
-    // Update
-      /*
-
--> 회원 권한수정 //user 도메인
-    요청 타입 : patch
-    endPoint : {userId}/roles
-            (함수명) :updateUserRole
-    반환값 :  ResponseEntity<List<UserDTO>>
-            reponseOK // DTO는 적으면 적을수록 좋다. 바뀐 최신화 정보인 role을 내려주도록 하자 -> 확장성이 좋다
-            . ReqeustBody로
-*/
-
     // put 맵핑
 
+    @Operation(summary="유저 권한 수정" , description = "id 에 해당하는 유저 권한 수정 ")
     @PutMapping("/{userId}/roles")
     public ResponseEntity<UserDTO> updateUserRole(@PathVariable(name = "userId") Long userId, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(userId, userDTO);
@@ -90,17 +74,7 @@ public class UserController {
 
 
 
-
-    // Delete
-    /*
-
--> 회원 삭제 //user 도메인
-    요청 타입 : delete
-    endPoint  :{userId}
-    함수명 : deleteUser
-    반환값 :   response OK
-*/
-    // delete 맵핑
+    @Operation(summary="유저 삭제" , description = "id 에 해당하는 유저 삭제 ")
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> deleteUser(@PathVariable(name = "userId") Long userId) {
         try {
