@@ -2,12 +2,14 @@ package io.elice.pokeranger.category.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Category {
 
 
