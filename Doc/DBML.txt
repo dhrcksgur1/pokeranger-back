@@ -1,0 +1,54 @@
+Table User {
+  ID INT [primary key, increment] // 사용자 식별을 위한 고유한 ID
+  //NickName VARCHAR(50) [not null] // 사용자명
+  Email VARCHAR(100) [unique, not null] // 이메일 주소 (중복 불가)
+  PasswordHash VARCHAR(255) [not null] // 비밀번호 해시값
+  Name VARCHAR(100) // 사용자의 이름 (FirstName과 LastName을 통합)
+  PhoneNumber VARCHAR(20) // 전화번호
+  Address VARCHAR(255) // 주소
+  UserType ENUM('Admin', 'User') [default: 'User'] // 사용자 타입 (Admin 또는 User)
+  RegistrationDate TIMESTAMP [default: `current_timestamp`] // 가입일
+  // 필요한 경우 다른 필드 추가
+}
+
+
+
+
+Table Product{
+  ID int [primary key, not null]
+  Name varchar
+  Price int
+  Stock int
+  Discription varchar
+}
+
+
+
+
+Table Category {
+  ID int [primary key, not null]
+  Name varchar
+}
+//추후 세부카테고리 추가
+
+
+Table Order {
+  ID int [primary key]
+  delivery_status varchar
+  order_message varchar
+  order_date datetime
+  User_ID int
+}
+
+
+Table OrderItem{
+  ID integer [primary key]
+  quantity integer [default: '1']
+  proudct_ID integer
+  order_ID integer
+}
+
+
+Ref: User.ID < Order.User_ID
+Ref: Product.ID < Category.ID
+ref:  Order.ID < OrderItem.order_ID
