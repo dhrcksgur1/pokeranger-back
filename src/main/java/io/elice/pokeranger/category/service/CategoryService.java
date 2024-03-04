@@ -9,6 +9,7 @@ import io.elice.pokeranger.user.entity.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,6 +48,10 @@ public class CategoryService {
             categoryRepository.save(category);
             return categoryMapper.categoryToCategoryDTO(category);
         }).orElse(null);
+    }
+
+    public List<Category> getCategryAll() {
+        return categoryRepository.findAll();
     }
 
 
