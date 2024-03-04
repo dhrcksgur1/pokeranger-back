@@ -12,6 +12,8 @@ import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,39 +61,60 @@ public class ProductService {
     }
 
 
-    //Read All Products
-    public List<ProductResponseDTO> findAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(productMapper::productToDto)
-                .collect(Collectors.toList());
+    //READ
+
+//    //Read All Products
+//    public List<ProductResponseDTO> findAllProducts() {
+//        List<Product> products = productRepository.findAll();
+//        return products.stream()
+//                .map(productMapper::productToDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//
+//    //Read Products By Productid
+//    public ProductResponseDTO findProductById(Long id) {
+//        Product product = productRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
+//        return productMapper.productToDto(product);
+//    }
+//
+//
+//    //Read Products by userID
+//    public List<ProductResponseDTO> getProductsByUserId(Long userId) {
+//        List<Product> products = productRepository.findByUserId(userId);
+//        return products.stream()
+//                .map(productMapper::productToDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//    //Read Products by CategoryID
+//    public List<ProductResponseDTO> getProductsByCategoryId(Long categoryId) {
+//        List<Product> products = productRepository.findByCategoryId(categoryId);
+//        List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
+//        for (Product product : products) {
+//            productResponseDTOs.add(productMapper.productToDto(product));
+//        }
+//        return productResponseDTOs;
+//    }
+
+
+    // Read All Products with Pagination
+    public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(productMapper::productToDto);
     }
 
-
-    //Read Products By Productid
-    public ProductResponseDTO findProductById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
-        return productMapper.productToDto(product);
+    // Read Products by UserID with Pagination
+    public Page<ProductResponseDTO> getProductsByUserId(Long userId, Pageable pageable) {
+        Page<Product> products = productRepository.findByUserId(userId, pageable);
+        return products.map(productMapper::productToDto);
     }
 
-
-    //Read Products by userID
-    public List<ProductResponseDTO> getProductsByUserId(Long userId) {
-        List<Product> products = productRepository.findByUserId(userId);
-        return products.stream()
-                .map(productMapper::productToDto)
-                .collect(Collectors.toList());
-    }
-
-    //Read Products by CategoryID
-    public List<ProductResponseDTO> getProductsByCategoryId(Long categoryId) {
-        List<Product> products = productRepository.findByCategoryId(categoryId);
-        List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
-        for (Product product : products) {
-            productResponseDTOs.add(productMapper.productToDto(product));
-        }
-        return productResponseDTOs;
+    // Read Products by CategoryID with Pagination
+    public Page<ProductResponseDTO> getProductsByCategoryId(Long categoryId, Pageable pageable) {
+        Page<Product> products = productRepository.findByCategoryId(categoryId, pageable);
+        return products.map(productMapper::productToDto);
     }
 
 
