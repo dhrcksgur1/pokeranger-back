@@ -49,9 +49,37 @@ async function handleSubmit(e) {
     return alert("사진은 최대 2.5MB 크기까지 가능합니다.");
   }
 
+
+  // 분석 해서  baseUrl -> localhost:8080 로 넣어주면 테스트 가능 
+
   try {
     const imageKey = await addImageToS3(imageInput, "category");
     const data = { title, description, themeClass, imageKey };
+
+
+    // 임시로 로컬호스트8080 으로 get 요청 
+    const  = 'http://localhost:8080';
+    
+   // 토큰이 있으면 Authorization 헤더를 포함, 없으면 포함하지 않음
+   const token = sessionStorage.getItem("token");
+   const headers = token ? { Authorization: `Bearer ${token}` } : {};
+ 
+   const res = await fetch(baseUrl + inputEndpoint ,  { headers });
+ 
+   // 응답 코드가 4XX 계열일 때 (400, 403 등)
+   if (!res.ok) {
+     const errorContent = await res.json();
+     const { reason } = errorContent;
+ 
+     throw new Error(reason);
+   }
+ 
+   const result = await res.json();
+   
+   console.log("요청 보냄 ")
+
+   // 
+    
 
     await Api.post("/categories", data);
 
