@@ -17,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
@@ -63,8 +66,9 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         // 최상위 경로를 적용하도록 하자 ,
-                        .requestMatchers("/", "/api/signup").permitAll() //인증없이 허용 .
-                        .anyRequest().authenticated()  // 위에 permitAll 말고는 다 인증받자.
+                        .requestMatchers("/categories", "/api/signup").permitAll() //인증없이 허용 .
+                      //  .anyRequest().authenticated()  // 위에 permitAll 말고는 다 인증받자.
+                        .anyRequest().permitAll()
                 )
 
 
@@ -79,4 +83,7 @@ public class SecurityConfig {
                 .with(new JwtSecurityConfig(tokenProvider), customizer -> {});
         return http.build();
     }
+
+
+
 }
