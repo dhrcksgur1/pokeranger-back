@@ -9,6 +9,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
@@ -18,27 +26,18 @@ public class CorsConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*"); // Access-Control-Allow-Origin  (Response에 자동으로 추가해줌)
-        config.addAllowedHeader("*");  // Access-Control-Request-Headers
-        config.addAllowedMethod("*"); // Access-Control-Request-Method
+        config.addAllowedOriginPattern("http://kdt-cloud-1-team03.elicecoding.com");
+        config.addAllowedOriginPattern("http://192.168.0.4:5500/");
+        config.addAllowedOriginPattern("http://localhost:8080" ); // 수정된 부분
+        config.addAllowedOriginPattern("http://localhost:63342");
+        config.addAllowedOriginPattern("http://127.0.0.1:5500");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
-
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins(
-                        "http://kdt-cloud-1-team03.elicecoding.com",
-                        "http://218.156.106.180",
-                        "http://192.168.55.146",
-                        "http://192.168.170.1"
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowCredentials(true)
-                .maxAge(3600);
-        // 다른 필요한 설정도 추가할 수 있습니다.
-    }
 }
+
+
+
