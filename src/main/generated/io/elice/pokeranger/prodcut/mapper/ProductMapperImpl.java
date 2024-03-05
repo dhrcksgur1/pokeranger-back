@@ -2,12 +2,13 @@ package io.elice.pokeranger.prodcut.mapper;
 
 import io.elice.pokeranger.prodcut.entity.Product;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
+import java.time.LocalDateTime;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-02-28T12:47:08+0900",
+    date = "2024-03-04T23:08:09+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -43,6 +44,8 @@ public class ProductMapperImpl implements ProductMapper {
         Long stock = null;
         String description = null;
         String images = null;
+        LocalDateTime createdAt = null;
+        LocalDateTime updatedAt = null;
 
         id = product.getId();
         name = product.getName();
@@ -50,10 +53,10 @@ public class ProductMapperImpl implements ProductMapper {
         stock = product.getStock();
         description = product.getDescription();
         images = product.getImages();
+        createdAt = product.getCreatedAt();
+        updatedAt = product.getUpdatedAt();
 
-        Long userId = null;
-
-        ProductResponseDTO productResponseDTO = new ProductResponseDTO( id, userId, name, price, stock, description, images );
+        ProductResponseDTO productResponseDTO = new ProductResponseDTO( id, name, price, stock, description, images, createdAt, updatedAt );
 
         return productResponseDTO;
     }
