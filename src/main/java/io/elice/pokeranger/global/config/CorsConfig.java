@@ -32,7 +32,7 @@ public class CorsConfig implements WebMvcConfigurer {
 
         registry.addMapping("/categories")
                 .allowedOrigins("http://kdt-cloud-1-team03.elicecoding.com")
-                .allowedMethods("GET", "POST","PATCH","DELETE" "OPTIONS");
+                .allowedMethods("GET", "POST","PATCH","DELETE", "OPTIONS");
         // 다른 필요한 설정도 추가할 수 있습니다.
     }
 }
