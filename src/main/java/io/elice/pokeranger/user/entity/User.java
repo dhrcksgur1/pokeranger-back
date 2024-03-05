@@ -1,9 +1,10 @@
 package io.elice.pokeranger.user.entity;
 
-import io.elice.pokeranger.enums.UserType;
+import io.elice.pokeranger.global.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchConnectionDetails;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -55,5 +56,9 @@ public class User {
         this.name = name;
         this.phoneNumber = PhoneNumber;
         this.address = Address;
+    }
+
+    public static ElasticsearchConnectionDetails.Node builder() {
+        return null;
     }
 }

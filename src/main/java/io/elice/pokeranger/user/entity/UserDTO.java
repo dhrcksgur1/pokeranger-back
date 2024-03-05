@@ -1,5 +1,5 @@
 package io.elice.pokeranger.user.entity;
-import io.elice.pokeranger.enums.UserType;
+import io.elice.pokeranger.global.enums.UserType;
 import lombok.Data;
 
 @Data
