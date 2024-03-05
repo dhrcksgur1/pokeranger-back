@@ -60,58 +60,19 @@ public class ProductService {
         return productMapper.productToDto(product);
     }
 
-
-    //READ
-
-//    //Read All Products
-//    public List<ProductResponseDTO> findAllProducts() {
-//        List<Product> products = productRepository.findAll();
-//        return products.stream()
-//                .map(productMapper::productToDto)
-//                .collect(Collectors.toList());
-//    }
-//
-//
-//    //Read Products By Productid
-//    public ProductResponseDTO findProductById(Long id) {
-//        Product product = productRepository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
-//        return productMapper.productToDto(product);
-//    }
-//
-//
-//    //Read Products by userID
-//    public List<ProductResponseDTO> getProductsByUserId(Long userId) {
-//        List<Product> products = productRepository.findByUserId(userId);
-//        return products.stream()
-//                .map(productMapper::productToDto)
-//                .collect(Collectors.toList());
-//    }
-//
-//    //Read Products by CategoryID
-//    public List<ProductResponseDTO> getProductsByCategoryId(Long categoryId) {
-//        List<Product> products = productRepository.findByCategoryId(categoryId);
-//        List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
-//        for (Product product : products) {
-//            productResponseDTOs.add(productMapper.productToDto(product));
-//        }
-//        return productResponseDTOs;
-//    }
-
-
-    // Read All Products with Pagination
+    // Read All Products
     public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
         Page<Product> products = productRepository.findAll(pageable);
         return products.map(productMapper::productToDto);
     }
 
-    // Read Products by UserID with Pagination
+    // Read Products by UserID
     public Page<ProductResponseDTO> getProductsByUserId(Long userId, Pageable pageable) {
         Page<Product> products = productRepository.findByUserId(userId, pageable);
         return products.map(productMapper::productToDto);
     }
 
-    // Read Products by CategoryID with Pagination
+    // Read Products by CategoryID
     public Page<ProductResponseDTO> getProductsByCategoryId(Long categoryId, Pageable pageable) {
         Page<Product> products = productRepository.findByCategoryId(categoryId, pageable);
         return products.map(productMapper::productToDto);
@@ -160,6 +121,42 @@ public class ProductService {
         return productRepository.save(product);
     }
      */
+    //READ
+
+//    //Read All Products
+//    public List<ProductResponseDTO> findAllProducts() {
+//        List<Product> products = productRepository.findAll();
+//        return products.stream()
+//                .map(productMapper::productToDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//
+//    //Read Products By Productid
+//    public ProductResponseDTO findProductById(Long id) {
+//        Product product = productRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
+//        return productMapper.productToDto(product);
+//    }
+//
+//
+//    //Read Products by userID
+//    public List<ProductResponseDTO> getProductsByUserId(Long userId) {
+//        List<Product> products = productRepository.findByUserId(userId);
+//        return products.stream()
+//                .map(productMapper::productToDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//    //Read Products by CategoryID
+//    public List<ProductResponseDTO> getProductsByCategoryId(Long categoryId) {
+//        List<Product> products = productRepository.findByCategoryId(categoryId);
+//        List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
+//        for (Product product : products) {
+//            productResponseDTOs.add(productMapper.productToDto(product));
+//        }
+//        return productResponseDTOs;
+//    }
 
 
 }
