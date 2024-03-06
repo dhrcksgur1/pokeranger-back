@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+
     //Read By ProductID
     @Operation(summary = "물품 조회 기능", description = "물품 고유 id로 검색")
     @GetMapping("/{id}")//수정코드
@@ -64,9 +66,18 @@ public class ProductController {
 
     // READ BY CategoryID
     @Operation(summary = "물품 조회 기능", description = "카테고리 고유 id로 검색")
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<Page<ProductResponseDTO>> getProductByCategoryId(@PathVariable Long categoryId, @PageableDefault(size = 10) Pageable pageable) {
-        Page<ProductResponseDTO> products = productService.getProductsByCategoryId(categoryId, pageable);
+//    @GetMapping("/category/{categoryId}")
+//    public ResponseEntity<Page<ProductResponseDTO>> getProductByCategoryId(@PathVariable Long categoryId, @PageableDefault(size = 10) Pageable pageable) {
+//        Page<ProductResponseDTO> products = productService.getProductsByCategoryId(categoryId, pageable);
+//        return ResponseEntity.ok(products);
+//    }
+
+        @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<ProductResponseDTO>> getProductByCategoryId(@PathVariable Long categoryId,
+                                                                           @RequestParam(defaultValue = "0") int page,
+                                                                           @RequestParam(defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<ProductResponseDTO> products = productService.getProductsByCategoryId(categoryId, pageRequest);
         return ResponseEntity.ok(products);
     }
 
