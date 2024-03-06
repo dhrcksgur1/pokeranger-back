@@ -1,4 +1,4 @@
-package io.elice.pokeranger.global.jwt;
+package io.elice.pokeranger.global.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

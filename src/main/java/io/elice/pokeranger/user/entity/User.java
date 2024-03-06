@@ -7,15 +7,20 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchConnectionDetails;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Table(name = "User")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +61,45 @@ public class User {
         this.name = name;
         this.phoneNumber = PhoneNumber;
         this.address = Address;
+    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // UserType에 따라 권한을 설정합니다.
+        String rolePrefix = "ROLE_"; // Spring Security에서는 권한을 'ROLE_'로 시작하는 것이 규칙입니다.
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(rolePrefix + this.type.name()));
+
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.passwordHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.name;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public static ElasticsearchConnectionDetails.Node builder() {

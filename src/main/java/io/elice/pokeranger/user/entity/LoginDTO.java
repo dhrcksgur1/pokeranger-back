@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Size;
 public class LoginDTO {
     @NotNull
     @Size(min = 3, max = 50)
-    private String username;
+    private String userEmail;
 
     @NotNull
     @Size(min = 3, max = 100)
