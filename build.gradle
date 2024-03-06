@@ -30,10 +30,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	implementation 'junit:junit:4.13.1'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
@@ -45,4 +46,13 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
+
+	//예외처리 TEST
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.0') // 사용하고 있는 JUnit 버전에 따라 변경 가능
+	testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.0') // 사용하고 있는 JUnit 버전에 따라 변경 가능
+}
+
+test {
+	useJUnitPlatform()
 }

@@ -2,6 +2,8 @@ package io.elice.pokeranger.prodcut.service;
 
 import io.elice.pokeranger.category.entity.Category;
 import io.elice.pokeranger.category.repository.CategoryRepository;
+import io.elice.pokeranger.global.exception.ExceptionCode;
+import io.elice.pokeranger.global.exception.ServiceLogicException;
 import io.elice.pokeranger.prodcut.entity.Product;
 import io.elice.pokeranger.prodcut.entity.ProductRequestDTO;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
@@ -44,8 +46,10 @@ public class ProductService {
     //CREATE
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO productDto) {
-        User user = userRepository.findById(productDto.getUserId()).orElse(null);
-        Category category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
+        User user = userRepository.findById(productDto.getUserId())
+                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.USER_NOT_FOUND));
+        Category category = categoryRepository.findById(productDto.getCategoryId())
+                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         Product product = new Product(
                 user,
@@ -83,7 +87,7 @@ public class ProductService {
     @Transactional//수정코드
     public ProductResponseDTO updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId));
+                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.PRODUCT_NOT_FOUND));
         product.setName(productRequestDTO.getName());
         product.setPrice(productRequestDTO.getPrice());
         product.setStock(productRequestDTO.getStock());
@@ -96,6 +100,9 @@ public class ProductService {
  // DELETE
     @Transactional
     public void deleteProductById(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ServiceLogicException(ExceptionCode.PRODUCT_NOT_FOUND);
+        }
         productRepository.deleteById(id);
     }
 
