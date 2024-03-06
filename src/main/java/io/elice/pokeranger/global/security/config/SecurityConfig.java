@@ -1,20 +1,26 @@
-package io.elice.pokeranger.global.security.config;
+package io.elice.pokeranger.global.config;
 
+import io.elice.pokeranger.global.jwt.JwtSecurityConfig;
+import io.elice.pokeranger.global.jwt.TokenProvider;
 
-import io.elice.pokeranger.global.security.jwt.TokenProvider;
-import io.elice.pokeranger.global.security.jwt.JwtSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -60,8 +66,9 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         // 최상위 경로를 적용하도록 하자 ,
-                        .requestMatchers("/", "/api/signup").permitAll() //인증없이 허용 .
-                        .anyRequest().authenticated()  // 위에 permitAll 말고는 다 인증받자.
+                        .requestMatchers("/categories", "/api/signup").permitAll() //인증없이 허용 .
+                      //  .anyRequest().authenticated()  // 위에 permitAll 말고는 다 인증받자.
+                        .anyRequest().permitAll()
                 )
 
 
@@ -76,4 +83,7 @@ public class SecurityConfig {
                 .with(new JwtSecurityConfig(tokenProvider), customizer -> {});
         return http.build();
     }
+
+
+
 }

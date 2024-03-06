@@ -40,6 +40,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryDTO);
     }
 
+    @CrossOrigin(origins = "http://kdt-cloud-1-team03.elicecoding.com")
     @Operation(summary = "카테고리 전체 요청  ", description = "요청 ")
     @GetMapping("")
     public ResponseEntity<List<Category>> getCategory() {
