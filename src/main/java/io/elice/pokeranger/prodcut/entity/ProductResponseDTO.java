@@ -18,4 +18,5 @@ public class ProductResponseDTO {
     private String images;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 }

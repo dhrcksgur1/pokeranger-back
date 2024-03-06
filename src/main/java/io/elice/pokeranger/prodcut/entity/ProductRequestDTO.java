@@ -34,4 +34,9 @@ public class ProductRequestDTO {
     private String description;
 
     private String images;
+
+    public ProductRequestDTO() {
+
+    }
 }
+

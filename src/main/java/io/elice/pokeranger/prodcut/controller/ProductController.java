@@ -38,15 +38,24 @@ public class ProductController {
         return ResponseEntity.ok(createdProduct);
     }
 
-
     // Read All Products
+    @Operation(summary = "물품 조회 기능", description = "전체 물품 조회")
     @GetMapping
     public ResponseEntity<Page<ProductResponseDTO>> getProductList(@PageableDefault(size = 10) Pageable pageable) {
         Page<ProductResponseDTO> products = productService.findAllProducts(pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    //Read By ProductID
+    @Operation(summary = "물품 조회 기능", description = "물품 고유 id로 검색")
+    @GetMapping("/{id}")//수정코드
+    public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable Long id) {
+        ProductResponseDTO product = productService.findProductById(id);
+        return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
     // Read By UserID
+    @Operation(summary = "물품 조회 기능", description = "유저 고유 id로 검색")
     @GetMapping("/user/{userId}")
     public ResponseEntity<Page<ProductResponseDTO>> getProductByUserId(@PathVariable Long userId, @PageableDefault(size = 10) Pageable pageable) {
         Page<ProductResponseDTO> products = productService.getProductsByUserId(userId, pageable);
@@ -54,6 +63,7 @@ public class ProductController {
     }
 
     // READ BY CategoryID
+    @Operation(summary = "물품 조회 기능", description = "카테고리 고유 id로 검색")
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<Page<ProductResponseDTO>> getProductByCategoryId(@PathVariable Long categoryId, @PageableDefault(size = 10) Pageable pageable) {
         Page<ProductResponseDTO> products = productService.getProductsByCategoryId(categoryId, pageable);
@@ -86,13 +96,7 @@ public class ProductController {
 //        return new ResponseEntity<>(products, HttpStatus.OK);
 //    }
 //
-//    //Read By ProductID
-//    @Operation(summary = "물품 조회 기능", description = "물품 고유 id로 검색")
-//    @GetMapping("/{id}")//수정코드
-//    public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable Long id) {
-//        ProductResponseDTO product = productService.findProductById(id);
-//        return new ResponseEntity<>(product, HttpStatus.OK);
-//    }
+
 //
 //
 //    //Read By UserID

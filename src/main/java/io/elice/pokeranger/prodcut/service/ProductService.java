@@ -70,6 +70,13 @@ public class ProductService {
         return products.map(productMapper::productToDto);
     }
 
+    //Read Products By Productid
+    public ProductResponseDTO findProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
+        return productMapper.productToDto(product);
+    }
+
     // Read Products by UserID
     public Page<ProductResponseDTO> getProductsByUserId(Long userId, Pageable pageable) {
         Page<Product> products = productRepository.findByUserId(userId, pageable);
