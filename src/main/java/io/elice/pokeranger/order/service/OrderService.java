@@ -71,7 +71,6 @@ public class OrderService {
 
         Page<OrderResponseDTO> orderResponseDTOs = orders.map(order -> {
             OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
-            orderResponseDTO.setOrderDate(order.getOrderDate());
             orderResponseDTO.setDeliveryState(order.getDeliveryState());
             orderResponseDTO.setTotalCost(order.getTotalCost());
 
