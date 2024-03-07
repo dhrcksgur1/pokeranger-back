@@ -1,10 +1,12 @@
 package io.elice.pokeranger.user.service;
 
+import io.elice.pokeranger.global.enums.UserType;
 import io.elice.pokeranger.user.entity.LoginDTO;
-import io.elice.pokeranger.user.mapper.UserMapper;
 import io.elice.pokeranger.user.entity.User;
 import io.elice.pokeranger.user.entity.UserDTO;
 import io.elice.pokeranger.user.repository.UserRepository;
+import io.elice.pokeranger.user.entity.RegisterDTO;
+import io.elice.pokeranger.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,14 +28,14 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDTO createUser(UserDTO userDTO) {
-        User user = userMapper.userDTOToUser(userDTO);
-        String encodedPassword = passwordEncoder.encode(user.getPasswordHash());
-        user.setPasswordHash(encodedPassword);
+    public UserDTO createUser(RegisterDTO registerDTO) {
+        User user = new User();
+        user.setName(registerDTO.getName());
+        user.setEmail(registerDTO.getEmail());
+        user.setType(UserType.User);
+        user.setPasswordHash(passwordEncoder.encode(registerDTO.getPassword()));
+
         userRepository.save(user);
-
-
-
 
         return userMapper.userToUserDTO(user);
     }

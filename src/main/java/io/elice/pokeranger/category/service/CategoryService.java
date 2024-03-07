@@ -4,8 +4,6 @@ import io.elice.pokeranger.category.entity.Category;
 import io.elice.pokeranger.category.entity.CategoryDTO;
 import io.elice.pokeranger.category.mapper.CategoryMapper;
 import io.elice.pokeranger.category.repository.CategoryRepository;
-import io.elice.pokeranger.user.entity.User;
-import io.elice.pokeranger.user.entity.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

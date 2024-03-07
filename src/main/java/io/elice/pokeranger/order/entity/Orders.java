@@ -4,7 +4,6 @@ import io.elice.pokeranger.order.deliverystate.DeliveryStateRole;
 import io.elice.pokeranger.orderItem.entity.OrderItem;
 import io.elice.pokeranger.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

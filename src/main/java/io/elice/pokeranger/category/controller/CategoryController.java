@@ -3,8 +3,6 @@ package io.elice.pokeranger.category.controller;
 import io.elice.pokeranger.category.entity.Category;
 import io.elice.pokeranger.category.entity.CategoryDTO;
 import io.elice.pokeranger.category.service.CategoryService;
-import io.elice.pokeranger.user.entity.User;
-import io.elice.pokeranger.user.entity.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,9 +43,7 @@ public class CategoryController {
     @GetMapping("")
     public ResponseEntity<List<Category>> getCategory() {
         List<Category> categoryDTOs = categoryService.getCategryAll();
-
         return new ResponseEntity<>(categoryDTOs, HttpStatus.OK);
-
     }
 
 
@@ -57,8 +53,6 @@ public class CategoryController {
         CategoryDTO updateCategory = categoryService.updateCategory(categoryId, categoryDTO);
         return ResponseEntity.ok(updateCategory);
     }
-
-
 
     @Operation(summary = "카테고리 삭제 ", description = "id 에 해당하는 카테고리 제거 ")
     @DeleteMapping("/{categoryId}")

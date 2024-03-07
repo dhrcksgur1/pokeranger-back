@@ -2,15 +2,10 @@ package io.elice.pokeranger.user.controller;
 
 import io.elice.pokeranger.global.security.jwt.JwtFilter;
 import io.elice.pokeranger.global.security.jwt.TokenProvider;
-import io.elice.pokeranger.user.entity.LoginDTO;
-import io.elice.pokeranger.user.entity.TokenDTO;
-import io.elice.pokeranger.user.entity.User;
-import io.elice.pokeranger.user.entity.UserDTO;
+import io.elice.pokeranger.user.entity.*;
 import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,7 +45,7 @@ public class UserController {
     // 프론트엔드의 api.post(/login) 요청
     @Operation(summary = "인증 정보 획득 ", description = "유저 인증 정보 획득  ")
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> authorize(@RequestBody LoginDTO loginDto) {
+    public ResponseEntity<LoginResponceDTO> authorize(@RequestBody LoginDTO loginDto) {
 
         System.out.println(loginDto.getEmail());
         System.out.println(loginDto.getPassword());
@@ -58,8 +54,10 @@ public class UserController {
 
         User user =  userService.getUserPasswordHash(loginDto);
 
+
+
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), user.getPasswordHash());
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
 
         System.out.println(authenticationToken);
@@ -76,12 +74,13 @@ public class UserController {
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
                                         // jwt 토큰  , 권한헤더 , responce OK
-        return new ResponseEntity<>(new TokenDTO(jwt), httpHeaders, HttpStatus.OK);
+
+        return new ResponseEntity<>(new LoginResponceDTO(jwt, user.getType()), httpHeaders, HttpStatus.OK);
     }
 
     @Operation(summary = "유저 생성 ", description = "userDTO정보로 신규 유저 추가 ")
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO userDTO) {
         UserDTO createdUser = userService.createUser(userDTO);
         return ResponseEntity.ok(createdUser);
     }

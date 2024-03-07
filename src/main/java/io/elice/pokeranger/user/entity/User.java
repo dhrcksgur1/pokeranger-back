@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    private Long  id;
+    private Long  id ;
 
     @Column(nullable = false, length = 100)
     private String email;
@@ -37,10 +37,10 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String phoneNumber;
 
-    @Column(nullable = false, length = 255)
+    @Column( length = 255)
     private String address;
 
     @Column(nullable = false)
