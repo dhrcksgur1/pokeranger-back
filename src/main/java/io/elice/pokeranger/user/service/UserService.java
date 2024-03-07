@@ -1,5 +1,6 @@
 package io.elice.pokeranger.user.service;
 
+import io.elice.pokeranger.user.entity.LoginDTO;
 import io.elice.pokeranger.user.mapper.UserMapper;
 import io.elice.pokeranger.user.entity.User;
 import io.elice.pokeranger.user.entity.UserDTO;
@@ -70,4 +71,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUserPasswordHash(LoginDTO loginDto) {
+        User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
+        if(  passwordEncoder.matches(loginDto.getPassword(), user.getPasswordHash()))
+        {
+            return user;
+        }else{
+            return null;
+        }
+    }
 }

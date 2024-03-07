@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+
 @Data
 @NoArgsConstructor
 @Table(name = "User")
@@ -105,4 +106,6 @@ public class User implements UserDetails {
     public static ElasticsearchConnectionDetails.Node builder() {
         return null;
     }
+
+
 }

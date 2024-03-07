@@ -54,12 +54,20 @@ public class UserController {
         System.out.println(loginDto.getEmail());
         System.out.println(loginDto.getPassword());
 
-        String encodedPassword = passwordEncoder.encode(loginDto.getPassword());
+
+
+        User user =  userService.getUserPasswordHash(loginDto);
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), encodedPassword);
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), user.getPasswordHash());
+
+
+        System.out.println(authenticationToken);
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        System.out.println(authentication);
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = tokenProvider.createToken(authentication);
