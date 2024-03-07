@@ -1,4 +1,4 @@
-package io.elice.pokeranger.global.config;
+package io.elice.pokeranger.global.security.config;
 
 
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,13 @@ public class CorsConfig implements WebMvcConfigurer {
         config.addAllowedOriginPattern("*");
 //        config.addAllowedOriginPattern("http://kdt-cloud-1-team03.elicecoding.com");
 //        config.addAllowedOriginPattern("http://192.168.0.4:5500/");
-//        config.addAllowedOriginPattern("http://localhost:8080" ); // 수정된 부분
+        config.addAllowedOriginPattern("http://localhost" ); // 수정된 부분
+        config.addAllowedOriginPattern("http://192.168.170.1" ); // 수정된 부분
+
+        config.addAllowedOriginPattern("http://192.168.56.1" ); // 수정된 부분
+        config.addAllowedOriginPattern("http://192.168.0.4" ); // 수정된 부분
+
+
 //        config.addAllowedOriginPattern("http://localhost:63342");
 //        config.addAllowedOriginPattern("http://127.0.0.1:5500");
         config.addAllowedHeader("*");

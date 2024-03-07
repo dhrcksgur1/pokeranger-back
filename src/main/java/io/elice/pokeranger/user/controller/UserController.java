@@ -9,7 +9,8 @@ import io.elice.pokeranger.user.entity.UserDTO;
 import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
