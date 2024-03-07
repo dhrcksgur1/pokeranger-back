@@ -9,6 +9,7 @@ import io.elice.pokeranger.user.entity.UserDTO;
 import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,15 @@ public class UserController {
 
     private UserService userService;
     private UserRepository userRepository;
+    private  PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, UserRepository userRepository, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public UserController(UserService userService, UserRepository userRepository, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, PasswordEncoder passwordEncoder) {
         this.userService =userService;
         this.userRepository  = userRepository;
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.passwordEncoder =  passwordEncoder;
     }
 
     // 프론트엔드의 api.post(/login) 요청
@@ -50,8 +53,11 @@ public class UserController {
 
         System.out.println(loginDto.getEmail());
         System.out.println(loginDto.getPassword());
+
+        String encodedPassword = passwordEncoder.encode(loginDto.getPassword());
+
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), encodedPassword);
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);

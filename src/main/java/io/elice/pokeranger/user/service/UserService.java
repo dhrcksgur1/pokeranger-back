@@ -27,8 +27,13 @@ public class UserService {
 
     public UserDTO createUser(UserDTO userDTO) {
         User user = userMapper.userDTOToUser(userDTO);
-
+        String encodedPassword = passwordEncoder.encode(user.getPasswordHash());
+        user.setPasswordHash(encodedPassword);
         userRepository.save(user);
+
+
+
+
         return userMapper.userToUserDTO(user);
     }
 
