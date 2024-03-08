@@ -1,10 +1,7 @@
 package io.elice.pokeranger.order.service;
 
 import io.elice.pokeranger.order.deliverystate.DeliveryStateRole;
-import io.elice.pokeranger.order.entity.OrderRequestDTO;
-import io.elice.pokeranger.order.entity.OrderResponseDTO;
-import io.elice.pokeranger.order.entity.OrderStateDTO;
-import io.elice.pokeranger.order.entity.Orders;
+import io.elice.pokeranger.order.entity.*;
 import io.elice.pokeranger.order.mapper.OrderMapper;
 import io.elice.pokeranger.order.repository.OrderRepository;
 import io.elice.pokeranger.orderItem.entity.CartItemDTO;
@@ -40,16 +37,26 @@ public class OrderService {
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
         User user = userRepository.findById(orderRequestDTO.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Address address = new Address(
+                orderRequestDTO.getAddress().getPostalCode(),
+                orderRequestDTO.getAddress().getAddress1(),
+                orderRequestDTO.getAddress().getAddress2(),
+                orderRequestDTO.getAddress().getReceiverName(),
+                orderRequestDTO.getAddress().getReceiverPhoneNumber()
+        );
+
         Orders order = new Orders(
                 orderRequestDTO.getOrderMessage(),
                 orderRequestDTO.getTotalCost(),
-                user
+                user,
+                address
         );
+
         for (CartItemDTO cartItem : orderRequestDTO.getCartItems()) {
             Product product = productRepository.findById(cartItem.getProductId())
                     .orElseThrow(() -> new EntityNotFoundException("Product not found"));
             if (product != null) {
-                OrderItem orderItem = new OrderItem(product, order, cartItem.getQuantity());
+                OrderItem orderItem = new OrderItem(product, order, cartItem.getQuantity(), cartItem.getTotalCost());
                 order.getItems().add(orderItem);
             }
         }
