@@ -1,4 +1,4 @@
-package io.elice.pokeranger.global.jwt;
+package io.elice.pokeranger.global.security.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
