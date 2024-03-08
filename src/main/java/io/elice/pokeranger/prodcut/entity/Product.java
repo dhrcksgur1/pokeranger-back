@@ -33,7 +33,7 @@ public class Product extends BaseEntity {
     private String images;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
