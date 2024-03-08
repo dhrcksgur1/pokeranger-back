@@ -1,4 +1,4 @@
-package io.elice.pokeranger.global.jwt;
+package io.elice.pokeranger.global.security.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

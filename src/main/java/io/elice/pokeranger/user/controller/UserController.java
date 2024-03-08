@@ -1,57 +1,27 @@
 package io.elice.pokeranger.user.controller;
-import io.elice.pokeranger.global.jwt.JwtFilter;
-import io.elice.pokeranger.global.jwt.TokenProvider;
-import io.elice.pokeranger.user.entity.LoginDTO;
-import io.elice.pokeranger.user.entity.TokenDTO;
-import io.elice.pokeranger.user.entity.User;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
-import org.springframework.http.*;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-
-import io.elice.pokeranger.order.entity.OrderResponseDTO;
-import io.elice.pokeranger.user.entity.UserDTO;
+import io.elice.pokeranger.global.security.jwt.JwtFilter;
+import io.elice.pokeranger.global.security.jwt.TokenProvider;
+import io.elice.pokeranger.user.entity.*;
 import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-
-// 시큐리티 + jwt 관련 import ------- Start
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
-
-import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.stream.Collectors;
-
-// 시큐리티 + jwt 관련 import ------- End
-
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static io.elice.pokeranger.global.jwt.JwtFilter.AUTHORIZATION_HEADER;
-
-
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
@@ -61,23 +31,41 @@ public class UserController {
 
     private UserService userService;
     private UserRepository userRepository;
+    private  PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, UserRepository userRepository, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public UserController(UserService userService, UserRepository userRepository, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, PasswordEncoder passwordEncoder) {
         this.userService =userService;
         this.userRepository  = userRepository;
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.passwordEncoder =  passwordEncoder;
     }
 
+    // 프론트엔드의 api.post(/login) 요청
     @Operation(summary = "인증 정보 획득 ", description = "유저 인증 정보 획득  ")
-    @PostMapping("/authenticate")
-    public ResponseEntity<TokenDTO> authorize(@Valid @RequestBody LoginDTO loginDto) {
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponceDTO> authorize(@RequestBody LoginDTO loginDto) {
+
+        System.out.println(loginDto.getEmail());
+        System.out.println(loginDto.getPassword());
+
+
+
+        User user =  userService.getUserPasswordHash(loginDto);
+
+
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+
+
+        System.out.println(authenticationToken);
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        System.out.println(authentication);
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = tokenProvider.createToken(authentication);
@@ -85,12 +73,14 @@ public class UserController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        return new ResponseEntity<>(new TokenDTO(jwt), httpHeaders, HttpStatus.OK);
+                                        // jwt 토큰  , 권한헤더 , responce OK
+
+        return new ResponseEntity<>(new LoginResponceDTO(jwt, user.getType()), httpHeaders, HttpStatus.OK);
     }
 
     @Operation(summary = "유저 생성 ", description = "userDTO정보로 신규 유저 추가 ")
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO userDTO) {
         UserDTO createdUser = userService.createUser(userDTO);
         return ResponseEntity.ok(createdUser);
     }
