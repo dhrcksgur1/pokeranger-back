@@ -29,6 +29,9 @@ public class Orders extends BaseEntity {
     private String orderMessage;
     private int totalCost;
 
+    @Embedded
+    private Address address;
+
     @Enumerated(EnumType.STRING)
     private DeliveryStateRole deliveryState;
 
@@ -39,11 +42,13 @@ public class Orders extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public Orders(String orderMessage, int totalCost, User user) {
+    public Orders(String orderMessage, int totalCost, User user, Address address) {
         this.orderMessage = orderMessage;
         this.totalCost = totalCost;
         this.user = user;
+        this.address = address;
         this.deliveryState = DeliveryStateRole.PREPARE;
     }
+
 
 }

@@ -75,7 +75,7 @@ public class UserController {
 
                                         // jwt 토큰  , 권한헤더 , responce OK
 
-        return new ResponseEntity<>(new LoginResponceDTO(jwt, user.getType()), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new LoginResponceDTO(jwt, user.getType(), user.getId()), httpHeaders, HttpStatus.OK);
     }
 
     @Operation(summary = "유저 생성 ", description = "userDTO정보로 신규 유저 추가 ")
