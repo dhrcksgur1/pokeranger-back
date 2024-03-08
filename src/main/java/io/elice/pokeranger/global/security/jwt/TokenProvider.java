@@ -72,8 +72,11 @@ public class TokenProvider implements InitializingBean {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
+        // 임의의 비밀번호를 설정합니다.
+        String password = "N/A";
+        User principal = new User(claims.getSubject(), password, authorities);
 
-        User principal = new User(claims.getSubject(), "", authorities);
+
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }

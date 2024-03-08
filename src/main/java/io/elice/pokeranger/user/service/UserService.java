@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,8 @@ public class UserService {
         user.setName(registerDTO.getName());
         user.setEmail(registerDTO.getEmail());
         user.setType(UserType.User);
+
+        user.setDeletedAt(new Date(0));
         user.setPasswordHash(passwordEncoder.encode(registerDTO.getPassword()));
 
         userRepository.save(user);

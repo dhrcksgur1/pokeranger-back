@@ -1,6 +1,5 @@
 package io.elice.pokeranger.category.controller;
 
-import io.elice.pokeranger.category.entity.Category;
 import io.elice.pokeranger.category.entity.CategoryDTO;
 import io.elice.pokeranger.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +40,8 @@ public class CategoryController {
     @CrossOrigin(origins = "http://kdt-cloud-1-team03.elicecoding.com")
     @Operation(summary = "카테고리 전체 요청  ", description = "요청 ")
     @GetMapping("")
-    public ResponseEntity<List<Category>> getCategory() {
-        List<Category> categoryDTOs = categoryService.getCategryAll();
+    public ResponseEntity<List<CategoryDTO>> getCategory() {
+        List<CategoryDTO> categoryDTOs = categoryService.getCategryAll();
         return new ResponseEntity<>(categoryDTOs, HttpStatus.OK);
     }
 

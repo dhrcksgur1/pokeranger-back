@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -48,8 +49,9 @@ public class CategoryService {
         }).orElse(null);
     }
 
-    public List<Category> getCategryAll() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> getCategryAll() {
+        return categoryRepository.findAll().stream().map(CategoryMapper.INSTANCE::categoryToCategoryDTO)
+                .collect(Collectors.toList());
     }
 
 

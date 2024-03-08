@@ -35,26 +35,28 @@ public class User implements UserDetails {
     private String passwordHash;
 
     @Column(nullable = false, length = 100)
-    private String name;
+    private String name = "1";
 
     @Column(length = 20)
-    private String phoneNumber;
+    private String phoneNumber= "1";
 
     @Column( length = 255)
-    private String address;
+    private String address= "1";
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType type;
 
     @CreatedDate
-    private Date createdAt;
+    private Date createdAt = new Date(0);
 
     @LastModifiedDate
-    private Date updatedAt;
+    private Date updatedAt= new Date(0);
 
-    private Date deletedAt;
+    private Date deletedAt= new Date(0);
+    public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 
+    }
     public User(UserType type, String email, String PasswordHash, String name, String PhoneNumber, String Address) {
         this.type = type;
         this.email = email;
