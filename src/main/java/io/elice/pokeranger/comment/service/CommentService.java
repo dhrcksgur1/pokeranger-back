@@ -1,19 +1,5 @@
 package io.elice.pokeranger.comment.service;
 
-import io.elice.pokeranger.comment.entity.Comment;
-import io.elice.pokeranger.comment.entity.CommentRequestDTO;
-import io.elice.pokeranger.comment.entity.CommentResponseDTO;
-import io.elice.pokeranger.comment.repository.CommentRepository;
-import io.elice.pokeranger.prodcut.entity.Product;
-import io.elice.pokeranger.prodcut.entity.ProductRequestDTO;
-import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
-import io.elice.pokeranger.prodcut.repository.ProductRepository;
-import io.elice.pokeranger.user.entity.User;
-import io.elice.pokeranger.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 //@Service
 //public class CommentService {
 //    private final CommentRepository commentRepository;

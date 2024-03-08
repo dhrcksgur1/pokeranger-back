@@ -1,41 +1,86 @@
 package io.elice.pokeranger.user.controller;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-import io.elice.pokeranger.order.entity.OrderResponseDTO;
-import io.elice.pokeranger.user.entity.User;
-import io.elice.pokeranger.user.entity.UserDTO;
+import io.elice.pokeranger.global.security.jwt.JwtFilter;
+import io.elice.pokeranger.global.security.jwt.TokenProvider;
+import io.elice.pokeranger.user.entity.*;
 import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
+    private  TokenProvider tokenProvider;
+    private  AuthenticationManagerBuilder authenticationManagerBuilder;
+
+
     private UserService userService;
     private UserRepository userRepository;
+    private  PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService,UserRepository userRepository) {
+    public UserController(UserService userService, UserRepository userRepository, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, PasswordEncoder passwordEncoder) {
         this.userService =userService;
         this.userRepository  = userRepository;
+        this.tokenProvider = tokenProvider;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.passwordEncoder =  passwordEncoder;
     }
 
+    // 프론트엔드의 api.post(/login) 요청
+    @Operation(summary = "인증 정보 획득 ", description = "유저 인증 정보 획득  ")
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponceDTO> authorize(@RequestBody LoginDTO loginDto) {
+
+        System.out.println(loginDto.getEmail());
+        System.out.println(loginDto.getPassword());
+
+
+
+        User user =  userService.getUserPasswordHash(loginDto);
+
+
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+
+
+        System.out.println(authenticationToken);
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        System.out.println(authentication);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String jwt = tokenProvider.createToken(authentication);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+                                        // jwt 토큰  , 권한헤더 , responce OK
+
+        return new ResponseEntity<>(new LoginResponceDTO(jwt, user.getType()), httpHeaders, HttpStatus.OK);
+    }
 
     @Operation(summary = "유저 생성 ", description = "userDTO정보로 신규 유저 추가 ")
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO userDTO) {
         UserDTO createdUser = userService.createUser(userDTO);
         return ResponseEntity.ok(createdUser);
     }
@@ -84,6 +129,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user with ID " + userId);
         }
     }
+
 
 
 

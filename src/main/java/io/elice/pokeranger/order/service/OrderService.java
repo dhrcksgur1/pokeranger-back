@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.elice.pokeranger.enums.UserType.Admin;
+import static io.elice.pokeranger.global.enums.UserType.Admin;
 
 @Service
 @RequiredArgsConstructor
