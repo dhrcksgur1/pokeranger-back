@@ -1,5 +1,6 @@
 package io.elice.pokeranger.prodcut.controller;
 
+import io.elice.pokeranger.prodcut.entity.ProductCreateDTO;
 import io.elice.pokeranger.prodcut.entity.ProductRequestDTO;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
 import io.elice.pokeranger.prodcut.service.ProductService;
@@ -7,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,11 +34,18 @@ public class ProductController {
     }
 
     //CREATE
+//    @Operation(summary = "물품 등록기능", description = "물품 등록")
+//    @PostMapping
+//    public ResponseEntity<ProductResponseDTO> createProduct(@Validated @RequestBody ProductRequestDTO productRequestDTO) {
+//        ProductResponseDTO createdProduct = productService.createProduct(productRequestDTO);
+//        return ResponseEntity.ok(createdProduct);
+//    }
+
     @Operation(summary = "물품 등록기능", description = "물품 등록")
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> createProduct(@Validated @RequestBody ProductRequestDTO productRequestDTO) {
-        ProductResponseDTO createdProduct = productService.createProduct(productRequestDTO);
-        return ResponseEntity.ok(createdProduct);
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
+        ProductResponseDTO productResponseDTO = productService.createProduct(productCreateDTO);
+        return new ResponseEntity<>(productResponseDTO, HttpStatus.CREATED);
     }
 
     // Read All Products

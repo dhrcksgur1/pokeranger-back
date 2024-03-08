@@ -5,6 +5,7 @@ import io.elice.pokeranger.category.repository.CategoryRepository;
 import io.elice.pokeranger.global.exception.ExceptionCode;
 import io.elice.pokeranger.global.exception.ServiceLogicException;
 import io.elice.pokeranger.prodcut.entity.Product;
+import io.elice.pokeranger.prodcut.entity.ProductCreateDTO;
 import io.elice.pokeranger.prodcut.entity.ProductRequestDTO;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
 import io.elice.pokeranger.prodcut.mapper.ProductMapper;
@@ -43,15 +44,32 @@ public class ProductService {
     }
 
     //CREATE
+//    @Transactional
+//    public ProductResponseDTO createProduct(ProductRequestDTO productDto) {
+//        User user = userRepository.findById(productDto.getUserId())
+//                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.USER_NOT_FOUND));
+//        Category category = categoryRepository.findById(productDto.getCategoryId())
+//                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
+//
+//        Product product = new Product(
+//                user,
+//                category,
+//                productDto.getName(),
+//                productDto.getPrice(),
+//                productDto.getStock(),
+//                productDto.getDescription(),
+//                productDto.getImages()
+//        );
+//        productRepository.save(product);
+//        return productMapper.productToDto(product);
+//    }
+
     @Transactional
-    public ProductResponseDTO createProduct(ProductRequestDTO productDto) {
-        User user = userRepository.findById(productDto.getUserId())
-                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.USER_NOT_FOUND));
+    public ProductResponseDTO createProduct(ProductCreateDTO productDto) {
         Category category = categoryRepository.findById(productDto.getCategoryId())
                 .orElseThrow(() -> new ServiceLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         Product product = new Product(
-                user,
                 category,
                 productDto.getName(),
                 productDto.getPrice(),
@@ -62,6 +80,8 @@ public class ProductService {
         productRepository.save(product);
         return productMapper.productToDto(product);
     }
+
+
 
     // Read All Products
     public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
