@@ -27,12 +27,6 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    // 결재창 페이지 - 유저의 정보 반환
-//    @GetMapping
-//    public ResponseEntity<UserResponseDTO> getOrder(){
-//        return
-//    }
-
     @Operation(summary = "주문 생성기능", description = "주문 생성기능입니다")
     @PostMapping
     public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderRequestDTO orderRequestDTO){
