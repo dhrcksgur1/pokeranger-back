@@ -1,5 +1,6 @@
 package io.elice.pokeranger.order.entity;
 
+import io.elice.pokeranger.global.entity.BaseEntity;
 import io.elice.pokeranger.order.deliverystate.DeliveryStateRole;
 import io.elice.pokeranger.orderItem.entity.OrderItem;
 import io.elice.pokeranger.user.entity.User;
@@ -19,7 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Orders {
+public class Orders extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +31,6 @@ public class Orders {
 
     @Enumerated(EnumType.STRING)
     private DeliveryStateRole deliveryState;
-
-    @CreatedDate
-    private LocalDateTime orderDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
