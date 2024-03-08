@@ -16,4 +16,6 @@ public class LoginResponceDTO {
 
     @NotNull
     private UserType type;
+
+    private Long userId;
 }
