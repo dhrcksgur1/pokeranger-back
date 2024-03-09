@@ -16,6 +16,4 @@ public class ProductResponseDTO {
     private Long stock;
     private String description;
     private String images;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
