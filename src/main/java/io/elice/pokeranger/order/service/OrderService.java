@@ -48,6 +48,7 @@ public class OrderService {
         Orders order = new Orders(
                 orderRequestDTO.getOrderMessage(),
                 orderRequestDTO.getTotalCost(),
+                orderRequestDTO.getSummaryTitle(),
                 user,
                 address
         );
