@@ -1,11 +1,10 @@
 package io.elice.pokeranger.user.service;
 
 import io.elice.pokeranger.global.enums.UserType;
-import io.elice.pokeranger.user.entity.LoginDTO;
-import io.elice.pokeranger.user.entity.User;
-import io.elice.pokeranger.user.entity.UserDTO;
+import io.elice.pokeranger.global.exception.ExceptionCode;
+import io.elice.pokeranger.global.exception.ServiceLogicException;
+import io.elice.pokeranger.user.entity.*;
 import io.elice.pokeranger.user.repository.UserRepository;
-import io.elice.pokeranger.user.entity.RegisterDTO;
 import io.elice.pokeranger.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -84,5 +83,13 @@ public class UserService {
         }else{
             return null;
         }
+    }
+
+    public UserDTO userRoleChange(Long userId, UserTypeDTO userTypeDTO){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ServiceLogicException(ExceptionCode.USER_NOT_FOUND));
+        user.setType(userTypeDTO.getRoles());
+        userRepository.save(user);
+        return userMapper.userToUserDTO(user);
     }
 }

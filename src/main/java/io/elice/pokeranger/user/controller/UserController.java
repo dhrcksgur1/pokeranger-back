@@ -111,9 +111,9 @@ public class UserController {
     // put 맵핑
 
     @Operation(summary="유저 권한 수정" , description = "id 에 해당하는 유저 권한 수정 ")
-    @PutMapping("/{userId}/roles")
-    public ResponseEntity<UserDTO> updateUserRole(@PathVariable(name = "userId") Long userId, @RequestBody UserDTO userDTO) {
-        UserDTO updatedUser = userService.updateUser(userId, userDTO);
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long userId, @RequestBody UserTypeDTO userTypeDTO) {
+        UserDTO updatedUser = userService.userRoleChange(userId, userTypeDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
