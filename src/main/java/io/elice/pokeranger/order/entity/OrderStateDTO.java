@@ -5,5 +5,5 @@ import lombok.Data;
 
 @Data
 public class OrderStateDTO {
-    private DeliveryStateRole deliveryState;
+    private String status;
 }

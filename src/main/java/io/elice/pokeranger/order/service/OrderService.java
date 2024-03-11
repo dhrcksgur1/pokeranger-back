@@ -79,19 +79,11 @@ public class OrderService {
 
         Page<OrderResponseDTO> orderResponseDTOs = orders.map(order -> {
             OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
-            orderResponseDTO.setDeliveryState(order.getDeliveryState());
+            orderResponseDTO.setId(order.getId());
             orderResponseDTO.setTotalCost(order.getTotalCost());
-
-            List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getId());
-
-            List<CartItemDTO> cartItemDTOs = orderItems.stream().map(item -> {
-                CartItemDTO cartItemDTO = new CartItemDTO();
-                cartItemDTO.setProductId(item.getProduct().getId());
-                cartItemDTO.setQuantity(item.getQuantity());
-                return cartItemDTO;
-            }).collect(Collectors.toList());
-
-            orderResponseDTO.setCartItems(cartItemDTOs);
+            orderResponseDTO.setCreatedAt(order.getCreatedAt());
+            orderResponseDTO.setSummaryTitle(order.getSummaryTitle());
+            orderResponseDTO.setDeliveryState(order.getDeliveryState().getDescription());
 
             return orderResponseDTO;
         });
@@ -112,7 +104,8 @@ public class OrderService {
     @Transactional
     public OrderResponseDTO updateOrderState(OrderStateDTO orderStateDTO, Long orderId) {
         Orders order = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("Order not found"));
-        order.setDeliveryState(orderStateDTO.getDeliveryState());
+        DeliveryStateRole deliveryState = DeliveryStateRole.fromDescription(orderStateDTO.getStatus());
+        order.setDeliveryState(deliveryState);
         orderRepository.save(order);
         return orderMapper.OrderToOrderResponseDTO(order);
     }
