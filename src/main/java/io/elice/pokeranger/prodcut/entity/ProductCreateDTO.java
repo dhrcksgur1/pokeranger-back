@@ -31,4 +31,7 @@ public class ProductCreateDTO {
     @Min(value = 0, message = "0이상의 가격을 입력해 주세요.")
     private Long price;
 
+    public ProductCreateDTO() {
+
+    }
 }
