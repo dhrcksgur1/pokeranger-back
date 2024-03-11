@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -37,8 +38,10 @@ public class OrderController {
     @Operation(summary = "유저 주문내역 조회", description = "유저아이디에 해당하는 주문내역을 가져옵니다")
     @GetMapping
     public ResponseEntity<Page<OrderResponseDTO>> getOrderListForUser(@RequestParam Long userId,
-                                                                      @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<OrderResponseDTO> orderList = orderService.getOrderList(userId, pageable);
+                                                                      @RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<OrderResponseDTO> orderList = orderService.getOrderList(userId, pageRequest);
         return new ResponseEntity<>(orderList, HttpStatus.OK);
     }
 
@@ -49,13 +52,6 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Operation(summary = "관리자 주문내역 조회", description = "관리자 id가 확인되면 모든 유저의 주문내역을 가져옵니다")
-    @GetMapping("/{userId}/admin")
-    public ResponseEntity<Page<OrderResponseDTO>> getOrderListForAdmin(@PathVariable Long userId,
-                                                                       @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<OrderResponseDTO> orderList = orderService.getOrderList(userId, pageable);
-        return new ResponseEntity<>(orderList, HttpStatus.OK);
-    }
 
     @Operation(summary = "주문상태 변경 기능", description = "관리자가 주문상태를 변경할수 있습니다.")
     @PatchMapping("/{orderId}")
