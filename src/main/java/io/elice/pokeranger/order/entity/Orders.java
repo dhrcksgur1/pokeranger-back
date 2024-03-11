@@ -28,6 +28,7 @@ public class Orders extends BaseEntity {
 
     private String orderMessage;
     private int totalCost;
+    private String summaryTitle;
 
     @Embedded
     private Address address;
@@ -42,9 +43,10 @@ public class Orders extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public Orders(String orderMessage, int totalCost, User user, Address address) {
+    public Orders(String orderMessage, int totalCost, String summaryTitle, User user, Address address) {
         this.orderMessage = orderMessage;
         this.totalCost = totalCost;
+        this.summaryTitle = summaryTitle;
         this.user = user;
         this.address = address;
         this.deliveryState = DeliveryStateRole.PREPARE;
