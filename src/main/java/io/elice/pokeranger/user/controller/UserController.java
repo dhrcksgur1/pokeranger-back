@@ -8,6 +8,8 @@ import io.elice.pokeranger.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,8 +90,10 @@ public class UserController {
     // Read
     @Operation(summary = "전체 회원 조회 ", description = "모든 user 정보 조회  ")
     @GetMapping
-    public ResponseEntity<List<User>> getUserListForAdmin() {
-        List<User> users = userService.getAll();
+    public ResponseEntity<Page<User>> getUserListForAdmin(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "20") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<User> users = userService.getAll(pageRequest);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -111,9 +115,9 @@ public class UserController {
     // put 맵핑
 
     @Operation(summary="유저 권한 수정" , description = "id 에 해당하는 유저 권한 수정 ")
-    @PutMapping("/{userId}/roles")
-    public ResponseEntity<UserDTO> updateUserRole(@PathVariable(name = "userId") Long userId, @RequestBody UserDTO userDTO) {
-        UserDTO updatedUser = userService.updateUser(userId, userDTO);
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long userId, @RequestBody UserTypeDTO userTypeDTO) {
+        UserDTO updatedUser = userService.userRoleChange(userId, userTypeDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
