@@ -1,4 +1,4 @@
-package io.elice.pokeranger.enums;
+package io.elice.pokeranger.global.enums;
 
 import lombok.Getter;
 

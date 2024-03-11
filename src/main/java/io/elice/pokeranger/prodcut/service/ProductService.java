@@ -2,7 +2,10 @@ package io.elice.pokeranger.prodcut.service;
 
 import io.elice.pokeranger.category.entity.Category;
 import io.elice.pokeranger.category.repository.CategoryRepository;
+import io.elice.pokeranger.global.exception.ExceptionCode;
+import io.elice.pokeranger.global.exception.ServiceLogicException;
 import io.elice.pokeranger.prodcut.entity.Product;
+import io.elice.pokeranger.prodcut.entity.ProductCreateDTO;
 import io.elice.pokeranger.prodcut.entity.ProductRequestDTO;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
 import io.elice.pokeranger.prodcut.mapper.ProductMapper;
@@ -12,12 +15,13 @@ import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,13 +44,32 @@ public class ProductService {
     }
 
     //CREATE
+//    @Transactional
+//    public ProductResponseDTO createProduct(ProductRequestDTO productDto) {
+//        User user = userRepository.findById(productDto.getUserId())
+//                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.USER_NOT_FOUND));
+//        Category category = categoryRepository.findById(productDto.getCategoryId())
+//                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
+//
+//        Product product = new Product(
+//                user,
+//                category,
+//                productDto.getName(),
+//                productDto.getPrice(),
+//                productDto.getStock(),
+//                productDto.getDescription(),
+//                productDto.getImages()
+//        );
+//        productRepository.save(product);
+//        return productMapper.productToDto(product);
+//    }
+
     @Transactional
-    public ProductResponseDTO createProduct(ProductRequestDTO productDto) {
-        User user = userRepository.findById(productDto.getUserId()).orElse(null);
-        Category category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
+    public ProductResponseDTO createProduct(ProductCreateDTO productDto) {
+        Category category = categoryRepository.findById(productDto.getCategoryId())
+                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         Product product = new Product(
-                user,
                 category,
                 productDto.getName(),
                 productDto.getPrice(),
@@ -59,14 +82,12 @@ public class ProductService {
     }
 
 
-    //Read All Products
-    public List<ProductResponseDTO> findAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(productMapper::productToDto)
-                .collect(Collectors.toList());
-    }
 
+    // Read All Products
+    public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(productMapper::productToDto);
+    }
 
     //Read Products By Productid
     public ProductResponseDTO findProductById(Long id) {
@@ -75,23 +96,16 @@ public class ProductService {
         return productMapper.productToDto(product);
     }
 
-
-    //Read Products by userID
-    public List<ProductResponseDTO> getProductsByUserId(Long userId) {
-        List<Product> products = productRepository.findByUserId(userId);
-        return products.stream()
-                .map(productMapper::productToDto)
-                .collect(Collectors.toList());
+    // Read Products by UserID
+    public Page<ProductResponseDTO> getProductsByUserId(Long userId, Pageable pageable) {
+        Page<Product> products = productRepository.findByUserId(userId, pageable);
+        return products.map(productMapper::productToDto);
     }
 
-    //Read Products by CategoryID
-    public List<ProductResponseDTO> getProductsByCategoryId(Long categoryId) {
-        List<Product> products = productRepository.findByCategoryId(categoryId);
-        List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
-        for (Product product : products) {
-            productResponseDTOs.add(productMapper.productToDto(product));
-        }
-        return productResponseDTOs;
+    // Read Products by CategoryID
+    public Page<ProductResponseDTO> getProductsByCategoryId(Long categoryId, Pageable pageable) {
+        Page<Product> products = productRepository.findByCategoryId(categoryId, pageable);
+        return products.map(productMapper::productToDto);
     }
 
 
@@ -99,7 +113,7 @@ public class ProductService {
     @Transactional//수정코드
     public ProductResponseDTO updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId));
+                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.PRODUCT_NOT_FOUND));
         product.setName(productRequestDTO.getName());
         product.setPrice(productRequestDTO.getPrice());
         product.setStock(productRequestDTO.getStock());
@@ -112,6 +126,9 @@ public class ProductService {
  // DELETE
     @Transactional
     public void deleteProductById(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ServiceLogicException(ExceptionCode.PRODUCT_NOT_FOUND);
+        }
         productRepository.deleteById(id);
     }
 
@@ -137,6 +154,42 @@ public class ProductService {
         return productRepository.save(product);
     }
      */
+    //READ
+
+//    //Read All Products
+//    public List<ProductResponseDTO> findAllProducts() {
+//        List<Product> products = productRepository.findAll();
+//        return products.stream()
+//                .map(productMapper::productToDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//
+//    //Read Products By Productid
+//    public ProductResponseDTO findProductById(Long id) {
+//        Product product = productRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
+//        return productMapper.productToDto(product);
+//    }
+//
+//
+//    //Read Products by userID
+//    public List<ProductResponseDTO> getProductsByUserId(Long userId) {
+//        List<Product> products = productRepository.findByUserId(userId);
+//        return products.stream()
+//                .map(productMapper::productToDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//    //Read Products by CategoryID
+//    public List<ProductResponseDTO> getProductsByCategoryId(Long categoryId) {
+//        List<Product> products = productRepository.findByCategoryId(categoryId);
+//        List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
+//        for (Product product : products) {
+//            productResponseDTOs.add(productMapper.productToDto(product));
+//        }
+//        return productResponseDTOs;
+//    }
 
 
 }

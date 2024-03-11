@@ -9,8 +9,9 @@ import java.util.List;
 
 @Data
 public class OrderResponseDTO {
-    private LocalDateTime orderDate;
-    private DeliveryStateRole deliveryState;
+    private Long id;
     private int totalCost;
-    private List<CartItemDTO> cartItems;
+    private LocalDateTime createdAt;
+    private String summaryTitle;
+    private String deliveryState;
 }
