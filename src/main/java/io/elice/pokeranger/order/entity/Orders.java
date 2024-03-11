@@ -1,10 +1,10 @@
 package io.elice.pokeranger.order.entity;
 
+import io.elice.pokeranger.global.entity.BaseEntity;
 import io.elice.pokeranger.order.deliverystate.DeliveryStateRole;
 import io.elice.pokeranger.orderItem.entity.OrderItem;
 import io.elice.pokeranger.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Orders {
+public class Orders extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +28,13 @@ public class Orders {
 
     private String orderMessage;
     private int totalCost;
+    private String summaryTitle;
+
+    @Embedded
+    private Address address;
 
     @Enumerated(EnumType.STRING)
     private DeliveryStateRole deliveryState;
-
-    @CreatedDate
-    private LocalDateTime orderDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -42,11 +43,14 @@ public class Orders {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public Orders(String orderMessage, int totalCost, User user) {
+    public Orders(String orderMessage, int totalCost, String summaryTitle, User user, Address address) {
         this.orderMessage = orderMessage;
         this.totalCost = totalCost;
+        this.summaryTitle = summaryTitle;
         this.user = user;
+        this.address = address;
         this.deliveryState = DeliveryStateRole.PREPARE;
     }
+
 
 }

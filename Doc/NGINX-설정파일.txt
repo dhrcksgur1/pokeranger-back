@@ -1,0 +1,159 @@
+server {
+
+  listen 80;
+
+  location / {
+    root   /home/elice/team3-front/pokeranger-front;
+    index  home/home.html;
+    try_files $uri /home/home.html;
+  }
+  
+	location /cart {
+        rewrite ^/cart$ /cart/cart.html last;
+    }
+
+	location /admin-users {
+		rewrite ^/admin-users$ /admin-users/admin-users.html last;
+    }
+	location /admin-orders {
+		rewrite ^/admin-orders$ /admin-orders/admin-orders.html last;
+	}
+
+	location /admin {
+		rewrite ^/admin$ /admin/admin.html last;
+	}
+
+	location /account-signout {
+		rewrite ^/account-signout$ /account-signout/account-signout.html last;
+	}
+
+	location /account-security {
+		rewrite ^/account-security$ /account-security/account-security.html last;
+	}
+
+	location /account-orders {
+		rewrite ^/account-orders$ /account-orders/account-orders.html last;
+	}
+
+	location /account {
+		rewrite ^/account$ /account/account.html last;
+	}
+
+	location /register {
+		rewrite ^/register$ /register/register.html last;
+	}
+
+	location /product-list {
+		rewrite ^/product-list$ /product-list/product-list.html last;
+	}
+
+	location /product-detail {
+		rewrite ^/product-detail$ /product-detail/product-detail.html last;
+	}
+
+	location /product-add {
+		rewrite ^/product-add$ /product-add/product-add.html last;
+	}
+
+	location /product {
+		rewrite ^/product$ /product/product.html last;
+	}
+
+	location /page-not-found {
+		rewrite ^/page-not-found$ /page-not-found/page-not-found.html last;
+	}
+
+	location /order-complete {
+		rewrite ^/order-complete$ /order-complete/order-complete.html last;
+	}
+
+	location /order {
+		rewrite ^/order$ /order/order.html last;
+	}
+
+	location /login {
+		rewrite ^/login$ /login/login.html last;
+    }
+
+
+	location /category-add {
+		rewrite ^/category-add$ /category-add/category-add.html last;
+    }
+	
+  error_page   500 502 503 504  /50x.html;
+
+  location = /50x.html {
+    root   home/home.html;
+  }
+}
+
+
+
+	location /admin-users {
+		rewrite ^/admin-users$ /admin-users/admin-users.html last;
+    }
+	location /admin-orders {
+		rewrite ^/admin-orders$ /admin-orders/admin-orders.html last;
+	}
+
+	location /admin {
+		rewrite ^/admin$ /admin/admin.html last;
+	}
+
+	location /account-signout {
+		rewrite ^/account-signout$ /account-signout/account-signout.html last;
+	}
+
+	location /account-security {
+		rewrite ^/account-security$ /account-security/account-security.html last;
+	}
+
+	location /account-orders {
+		rewrite ^/account-orders$ /account-orders/account-orders.html last;
+	}
+
+	location /account {
+		rewrite ^/account$ /account/account.html last;
+	}
+
+	location /register {
+		rewrite ^/register$ /register/register.html last;
+	}
+
+	location /product-list {
+		rewrite ^/product-list$ /product-list/product-list.html last;
+	}
+
+	location /product-detail {
+		rewrite ^/product-detail$ /product-detail/product-detail.html last;
+	}
+
+	location /product-add {
+		rewrite ^/product-add$ /product-add/product-add.html last;
+	}
+
+	location /product {
+		rewrite ^/product$ /product/product.html last;
+	}
+
+	location /page-not-found {
+		rewrite ^/page-not-found$ /page-not-found/page-not-found.html last;
+	}
+
+	location /order-complete {
+		rewrite ^/order-complete$ /order-complete/order-complete.html last;
+	}
+
+	location /order {
+		rewrite ^/order$ /order/order.html last;
+	}
+
+	location /login {
+		rewrite ^/login$ /login/login.html last;
+    }
+
+
+	location /category-add {
+		rewrite ^/category-add$ /category-add/category-add.html last;
+    }
+

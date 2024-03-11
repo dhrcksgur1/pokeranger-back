@@ -1,12 +1,17 @@
 package io.elice.pokeranger.user.service;
 
-import io.elice.pokeranger.user.mapper.UserMapper;
+import io.elice.pokeranger.global.enums.UserType;
+import io.elice.pokeranger.user.entity.LoginDTO;
 import io.elice.pokeranger.user.entity.User;
 import io.elice.pokeranger.user.entity.UserDTO;
 import io.elice.pokeranger.user.repository.UserRepository;
+import io.elice.pokeranger.user.entity.RegisterDTO;
+import io.elice.pokeranger.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,17 +20,26 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDTO createUser(UserDTO userDTO) {
-        User user = userMapper.userDTOToUser(userDTO);
+    public UserDTO createUser(RegisterDTO registerDTO) {
+        User user = new User();
+        user.setName(registerDTO.getName());
+        user.setEmail(registerDTO.getEmail());
+        user.setType(UserType.User);
+
+        user.setDeletedAt(new Date(0));
+        user.setPasswordHash(passwordEncoder.encode(registerDTO.getPassword()));
 
         userRepository.save(user);
+
         return userMapper.userToUserDTO(user);
     }
 
@@ -62,4 +76,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUserPasswordHash(LoginDTO loginDto) {
+        User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
+        if(  passwordEncoder.matches(loginDto.getPassword(), user.getPasswordHash()))
+        {
+            return user;
+        }else{
+            return null;
+        }
+    }
 }

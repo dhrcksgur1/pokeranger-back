@@ -13,7 +13,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
-    @Mapping(target = "orderDate", ignore = true)
     Orders OrderRequestDTOToOrder(OrderRequestDTO orderRequestDTO);
 
     OrderResponseDTO OrderToOrderResponseDTO(Orders orders);
