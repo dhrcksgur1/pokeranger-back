@@ -52,8 +52,8 @@ public class Product extends BaseEntity {
 //    }
 
     //추가
-    public Product(Category category ,String name, Long price,Long stock,String description,String images){
-        //this.user = user;
+    public Product(User user, Category category ,String name, Long price,Long stock,String description,String images){
+        this.user = user;
         this.category = category;
         this.name = name;
         this.price = price;

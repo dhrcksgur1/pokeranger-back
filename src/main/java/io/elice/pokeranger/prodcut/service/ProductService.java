@@ -66,10 +66,14 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO createProduct(ProductCreateDTO productDto) {
+        User user = userRepository.findById(productDto.getUserId())
+                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.USER_NOT_FOUND));
+
         Category category = categoryRepository.findById(productDto.getCategoryId())
                 .orElseThrow(() -> new ServiceLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         Product product = new Product(
+                user,
                 category,
                 productDto.getName(),
                 productDto.getPrice(),
