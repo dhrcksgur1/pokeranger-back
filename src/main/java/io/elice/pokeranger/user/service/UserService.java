@@ -7,6 +7,8 @@ import io.elice.pokeranger.user.entity.*;
 import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -70,9 +72,9 @@ public class UserService {
             throw new RuntimeException("User with ID " + userId + " not found");
         }
     }
-    public List<User> getAll() {
+    public Page<User> getAll(Pageable pageable) {
 
-        return userRepository.findAll();
+        return userRepository.findAll(pageable);
     }
 
     public User getUserPasswordHash(LoginDTO loginDto) {
