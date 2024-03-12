@@ -20,8 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -97,6 +95,7 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+
     @Operation(summary = "유저 정보 요청 ", description = "id 에 해당하는 유저 반환 ")
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable(name ="userId") Long userId) {
@@ -112,6 +111,12 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
     }
 
+
+    @Operation(summary="패스워드 체크 " , description = "유저의 패스워드 체크  ")
+    @PostMapping("/password-check")
+    public ResponseEntity<Long> checkPassword(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.checkPasswordHash(userDTO));
+    }
     // put 맵핑
 
     @Operation(summary="유저 권한 수정" , description = "id 에 해당하는 유저 권한 수정 ")

@@ -113,4 +113,15 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow();
 
     }
+
+    public Long checkPasswordHash(UserDTO checkUserDTO) {
+
+        UserDTO getUserDTO = getUserById(checkUserDTO.getId());
+        if( getUserDTO.getPasswordHash() != passwordEncoder.encode(checkUserDTO.getPasswordHash()))
+        {
+            throw new RuntimeException("password is not match");
+
+        }
+        return getUserDTO.getId();
+    }
 }
