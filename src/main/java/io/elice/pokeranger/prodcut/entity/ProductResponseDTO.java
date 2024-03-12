@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductResponseDTO {
     private Long id; //postman 테스트 용 추후 삭제
+    private String userName;
     private Long userId;
     private Long categoryId;
     private Long price;

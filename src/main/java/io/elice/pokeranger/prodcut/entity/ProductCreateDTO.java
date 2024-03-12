@@ -12,6 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductCreateDTO {
+
     @NotNull
     private Long userId;
 
@@ -24,6 +25,7 @@ public class ProductCreateDTO {
     @NotNull(message = "상세설명은 필수 입력란 입니다.")
     private String description;
 
+    @NotNull(message = "이미지는 필수 입력란 입니다.")
     private String images;
 
     @NotNull(message = "재고는 필수 입력란 입니다")

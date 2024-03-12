@@ -49,5 +49,4 @@ public class Product extends BaseEntity {
         this.description = description;
         this.images = images;
     }
-
 }
