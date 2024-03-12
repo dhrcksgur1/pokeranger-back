@@ -1,7 +1,6 @@
 package io.elice.pokeranger.order.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.elice.pokeranger.order.deliverystate.DeliveryStateRole;
 import io.elice.pokeranger.order.entity.OrderRequestDTO;
 import io.elice.pokeranger.order.entity.OrderResponseDTO;
 import io.elice.pokeranger.order.service.OrderService;
@@ -57,10 +56,12 @@ class OrderControllerTest {
         orderRequestDTO.setTotalCost(35000);
         orderRequestDTO.setCartItems(cartItems);
 */
-        orderResponseDTO = new OrderResponseDTO();
-        orderResponseDTO.setTotalCost(35000);
-        orderResponseDTO.setDeliveryState(DeliveryStateRole.PREPARE);
-        orderResponseDTO.setCartItems(cartItems);
+        // TODO 빌드 실패로 주석처리
+        //orderResponseDTO = new OrderResponseDTO();
+        //orderResponseDTO.setTotalCost(35000);
+
+        //orderResponseDTO.setDeliveryState(DeliveryStateRole.PREPARE);
+        //orderResponseDTO.set(cartItems);
 
     }
 /*

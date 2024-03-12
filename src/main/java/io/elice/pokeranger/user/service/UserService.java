@@ -4,16 +4,16 @@ import io.elice.pokeranger.global.enums.UserType;
 import io.elice.pokeranger.global.exception.ExceptionCode;
 import io.elice.pokeranger.global.exception.ServiceLogicException;
 import io.elice.pokeranger.user.entity.*;
-import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.mapper.UserMapper;
+import io.elice.pokeranger.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
