@@ -86,7 +86,7 @@ public class UserController {
 
     // Read
     @Operation(summary = "전체 회원 조회 ", description = "모든 user 정보 조회  ")
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<List<User>> getUserListForAdmin() {
         List<User> users = userService.getAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -94,7 +94,7 @@ public class UserController {
 
     @Operation(summary = "유저 정보 요청 ", description = "id 에 해당하는 유저 반환 ")
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable(name ="userId") Long userId) {
         UserDTO userDTO = userService.getUserById(userId);
         return ResponseEntity.ok(userDTO);
     }

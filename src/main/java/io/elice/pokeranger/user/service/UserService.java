@@ -1,12 +1,9 @@
 package io.elice.pokeranger.user.service;
 
 import io.elice.pokeranger.global.enums.UserType;
-import io.elice.pokeranger.user.entity.LoginDTO;
-import io.elice.pokeranger.user.entity.User;
-import io.elice.pokeranger.user.entity.UserDTO;
-import io.elice.pokeranger.user.repository.UserRepository;
-import io.elice.pokeranger.user.entity.RegisterDTO;
+import io.elice.pokeranger.user.entity.*;
 import io.elice.pokeranger.user.mapper.UserMapper;
+import io.elice.pokeranger.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,14 +48,28 @@ public class UserService {
 
     public UserDTO updateUser(Long userId, UserDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(userId);
+        User originalUser = optionalUser.orElseThrow();
         return optionalUser.map(user -> {
             // Update user fields with values from userDTO
-            user.setName(userDTO.getName());
-            user.setEmail(userDTO.getEmail());
-            user.setAddress(userDTO.getAddress());
-            user.setType(userDTO.getType());
-            user.setPhoneNumber(userDTO.getPhoneNumber());
-            user.setPasswordHash(userDTO.getPasswordHash());
+            String name = userDTO.getName() == "" ?  originalUser.getName() :userDTO.getName();
+            user.setName(name);
+            String email = userDTO.getEmail() == "" ?  originalUser.getEmail() :userDTO.getEmail();
+            user.setEmail(email);
+
+            AddressDTO address = userDTO.getAddress() == null ?  originalUser.getAddress() : userDTO.getAddress();
+            user.setAddress(address);
+
+            UserType userType = userDTO.getType() == null ?  originalUser.getType():userDTO.getType() ;
+            user.setType(userType);
+
+            String phoneNumber = userDTO.getPhoneNumber() == null ?  originalUser.getPhoneNumber(): userDTO.getPhoneNumber() ;
+            user.setPhoneNumber(phoneNumber);
+
+            String password = "";
+            if (userDTO.getPasswordHash() != null) {
+                user.setPasswordHash(passwordEncoder.encode(userDTO.getPasswordHash()));
+            }
+
 
             userRepository.save(user);
             return userMapper.userToUserDTO(user);
