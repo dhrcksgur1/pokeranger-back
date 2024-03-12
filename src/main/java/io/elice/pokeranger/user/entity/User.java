@@ -29,19 +29,19 @@ public class User implements UserDetails {
     private  Long  id ;
 
     @Column(nullable = false, length = 100)
-    private  String email;
+    private  String email ="";
 
     @Column(nullable = false, length = 255)
-    private  String passwordHash;
+    private  String passwordHash="";
 
     @Column(nullable = false, length = 100)
-    private  String name;
+    private  String name="";
 
     @Column(length = 20)
-    private  String phoneNumber;
+    private  String phoneNumber="";
 
     @Embedded
-    private  AddressDTO address;
+    private  AddressDTO address = new AddressDTO();
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -53,11 +53,13 @@ public class User implements UserDetails {
 
     @Column
     @LastModifiedDate
-    private  Date updatedAt;
+    private  Date updatedAt = new Date(0);
 
     @Column
-    private Date deletedAt;
+    private Date deletedAt= new Date(0);;
+    public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 
+    }
 public User(UserType type, String email, String PasswordHash, String name, String PhoneNumber, AddressDTO Address) {
         this.type = type;
         this.email = email;

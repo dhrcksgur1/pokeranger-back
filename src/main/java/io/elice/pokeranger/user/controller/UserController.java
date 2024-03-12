@@ -14,9 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,37 +45,36 @@ public class UserController {
     @Operation(summary = "인증 정보 획득 ", description = "유저 인증 정보 획득  ")
     @PostMapping("/login")
     public ResponseEntity<LoginResponceDTO> authorize(@RequestBody LoginDTO loginDto) {
+
         System.out.println(loginDto.getEmail());
         System.out.println(loginDto.getPassword());
 
 
-        UserDetails userDetails = userService.loadUserByUsername(loginDto.getEmail(), loginDto.getPassword());
-        userDetails.getUsername();
+
+        User user =  userService.getUserPasswordHash(loginDto);
+
+
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userDetails, loginDto.getPassword(), userDetails.getAuthorities());
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+
 
         System.out.println(authenticationToken);
-        //authenticationToken.setDetails(userDetails);
-        try {
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            System.out.println(authentication);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        System.out.println(authentication);
 
-            String jwt = tokenProvider.createToken(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-            User user = userService.getUserPasswordHash(loginDto);
-            // jwt 토큰  , 권한헤더 , responce OK
-            return new ResponseEntity<>(new LoginResponceDTO(jwt, user.getType(), user.getId()), httpHeaders, HttpStatus.OK);
+        String jwt = tokenProvider.createToken(authentication);
 
-        } catch (AuthenticationException e) {
-            // Handle authentication failure
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+        // jwt 토큰  , 권한헤더 , responce OK
+
+        return new ResponseEntity<>(new LoginResponceDTO(jwt, user.getType(), user.getId()), httpHeaders, HttpStatus.OK);
     }
 
     @Operation(summary = "유저 생성 ", description = "userDTO정보로 신규 유저 추가 ")

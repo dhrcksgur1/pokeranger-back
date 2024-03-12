@@ -13,7 +13,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Embeddable
 public class AddressDTO {
-    private String postalCode;
-    private String address1;
-    private String address2;
+    private String postalCode= "";
+
+
+    private String address1= "";
+    private String address2= "";
 }
