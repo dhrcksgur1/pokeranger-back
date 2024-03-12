@@ -1,11 +1,14 @@
 package io.elice.pokeranger.user.service;
 
 import io.elice.pokeranger.global.enums.UserType;
+import io.elice.pokeranger.global.exception.ExceptionCode;
+import io.elice.pokeranger.global.exception.ServiceLogicException;
 import io.elice.pokeranger.user.entity.*;
-import io.elice.pokeranger.user.mapper.UserMapper;
 import io.elice.pokeranger.user.repository.UserRepository;
+import io.elice.pokeranger.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -83,9 +86,9 @@ public class UserService {
             throw new RuntimeException("User with ID " + userId + " not found");
         }
     }
-    public List<User> getAll() {
+    public Page<User> getAll(Pageable pageable) {
 
-        return userRepository.findAll();
+        return userRepository.findAll(pageable);
     }
 
     public User getUserPasswordHash(LoginDTO loginDto) {
@@ -96,6 +99,14 @@ public class UserService {
         }else{
             return null;
         }
+    }
+
+    public UserDTO userRoleChange(Long userId, UserTypeDTO userTypeDTO){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ServiceLogicException(ExceptionCode.USER_NOT_FOUND));
+        user.setType(userTypeDTO.getRoles());
+        userRepository.save(user);
+        return userMapper.userToUserDTO(user);
     }
 
     public UserDetails loadUserByUsername(String email, String password) {
