@@ -14,12 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -46,36 +47,37 @@ public class UserController {
     @Operation(summary = "인증 정보 획득 ", description = "유저 인증 정보 획득  ")
     @PostMapping("/login")
     public ResponseEntity<LoginResponceDTO> authorize(@RequestBody LoginDTO loginDto) {
-
         System.out.println(loginDto.getEmail());
         System.out.println(loginDto.getPassword());
 
 
-
-        User user =  userService.getUserPasswordHash(loginDto);
-
-
+        UserDetails userDetails = userService.loadUserByUsername(loginDto.getEmail(), loginDto.getPassword());
+        userDetails.getUsername();
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-
+                new UsernamePasswordAuthenticationToken(userDetails, loginDto.getPassword(), userDetails.getAuthorities());
 
         System.out.println(authenticationToken);
+        //authenticationToken.setDetails(userDetails);
+        try {
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            System.out.println(authentication);
 
-        System.out.println(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.createToken(authentication);
 
-        String jwt = tokenProvider.createToken(authentication);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+            User user = userService.getUserPasswordHash(loginDto);
+            // jwt 토큰  , 권한헤더 , responce OK
+            return new ResponseEntity<>(new LoginResponceDTO(jwt, user.getType(), user.getId()), httpHeaders, HttpStatus.OK);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-                                        // jwt 토큰  , 권한헤더 , responce OK
-
-        return new ResponseEntity<>(new LoginResponceDTO(jwt, user.getType(), user.getId()), httpHeaders, HttpStatus.OK);
+        } catch (AuthenticationException e) {
+            // Handle authentication failure
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @Operation(summary = "유저 생성 ", description = "userDTO정보로 신규 유저 추가 ")
@@ -113,6 +115,14 @@ public class UserController {
     @Operation(summary="유저 권한 수정" , description = "id 에 해당하는 유저 권한 수정 ")
     @PutMapping("/{userId}/roles")
     public ResponseEntity<UserDTO> updateUserRole(@PathVariable(name = "userId") Long userId, @RequestBody UserDTO userDTO) {
+        UserDTO updatedUser = userService.updateUser(userId, userDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+
+    @Operation(summary="유저 정보 수정" , description = "id 에 해당하는 유저 정보 수정 ")
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UserDTO> updateUserData(@PathVariable(name = "userId") Long userId, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(userId, userDTO);
         return ResponseEntity.ok(updatedUser);
     }

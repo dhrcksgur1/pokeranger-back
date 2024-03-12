@@ -8,6 +8,7 @@ import io.elice.pokeranger.user.repository.UserRepository;
 import io.elice.pokeranger.user.entity.RegisterDTO;
 import io.elice.pokeranger.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -84,5 +85,10 @@ public class UserService {
         }else{
             return null;
         }
+    }
+
+    public UserDetails loadUserByUsername(String email, String password) {
+        return userRepository.findByEmail(email).orElseThrow();
+
     }
 }
