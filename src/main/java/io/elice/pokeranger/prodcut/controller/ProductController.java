@@ -1,13 +1,9 @@
 package io.elice.pokeranger.prodcut.controller;
 
 import io.elice.pokeranger.prodcut.entity.ProductCreateDTO;
-import io.elice.pokeranger.prodcut.entity.ProductRequestDTO;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
 import io.elice.pokeranger.prodcut.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -35,7 +29,7 @@ public class ProductController {
 
     //CREATE
 //    @Operation(summary = "물품 등록기능", description = "물품 등록")
-//    @PostMapping
+//    @PostMappingㅔ
 //    public ResponseEntity<ProductResponseDTO> createProduct(@Validated @RequestBody ProductRequestDTO productRequestDTO) {
 //        ProductResponseDTO createdProduct = productService.createProduct(productRequestDTO);
 //        return ResponseEntity.ok(createdProduct);
@@ -92,8 +86,8 @@ public class ProductController {
 
     //UPADTE
     @Operation(summary = "등록 물품 수정 기능", description = "등록된 물품 정보 수정")
-    @PutMapping("/{id}") //수정코드
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id,@Validated @RequestBody ProductRequestDTO productRequestDTO) {
+    @PatchMapping("/{id}") //수정코드
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id,@Validated @RequestBody ProductCreateDTO productRequestDTO) {
         ProductResponseDTO updatedProduct = productService.updateProduct(id, productRequestDTO);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }

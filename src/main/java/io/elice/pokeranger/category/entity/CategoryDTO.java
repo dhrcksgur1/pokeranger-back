@@ -4,5 +4,8 @@ import lombok.Data;
 @Data
 public class CategoryDTO {
     private Long id;
-    private String name;
+    private String title;
+    private String description;
+    private String themeClass;
+    private String imageKey;
 }

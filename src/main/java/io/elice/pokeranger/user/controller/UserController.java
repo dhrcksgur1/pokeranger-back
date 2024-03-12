@@ -99,7 +99,7 @@ public class UserController {
 
     @Operation(summary = "유저 정보 요청 ", description = "id 에 해당하는 유저 반환 ")
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable(name ="userId") Long userId) {
         UserDTO userDTO = userService.getUserById(userId);
         return ResponseEntity.ok(userDTO);
     }
@@ -118,6 +118,14 @@ public class UserController {
     @PatchMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long userId, @RequestBody UserTypeDTO userTypeDTO) {
         UserDTO updatedUser = userService.userRoleChange(userId, userTypeDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+
+    @Operation(summary="유저 정보 수정" , description = "id 에 해당하는 유저 정보 수정 ")
+    @PatchMapping("/modify/{userId}")
+    public ResponseEntity<UserDTO> updateUserData(@PathVariable(name = "userId") Long userId, @RequestBody UserDTO userDTO) {
+        UserDTO updatedUser = userService.updateUser(userId, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
