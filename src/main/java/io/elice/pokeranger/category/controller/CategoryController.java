@@ -41,7 +41,7 @@ public class CategoryController {
     @Operation(summary = "카테고리 전체 요청  ", description = "요청 ")
     @GetMapping("")
     public ResponseEntity<List<CategoryDTO>> getCategory() {
-        List<CategoryDTO> categoryDTOs = categoryService.getCategryAll();
+        List<CategoryDTO> categoryDTOs = categoryService.getCategoryAll();
         return new ResponseEntity<>(categoryDTOs, HttpStatus.OK);
     }
 
