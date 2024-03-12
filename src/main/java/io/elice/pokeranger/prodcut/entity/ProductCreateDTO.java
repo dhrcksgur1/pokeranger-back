@@ -3,14 +3,17 @@ package io.elice.pokeranger.prodcut.entity;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductCreateDTO {
+    @NotNull
+    private Long userId;
 
     @NotNull(message = "Category ID 는 필수 입력란 입니다.")
     private Long categoryId;
@@ -31,7 +34,4 @@ public class ProductCreateDTO {
     @Min(value = 0, message = "0이상의 가격을 입력해 주세요.")
     private Long price;
 
-    public ProductCreateDTO() {
-
-    }
 }

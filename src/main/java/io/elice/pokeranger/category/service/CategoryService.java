@@ -21,10 +21,10 @@ public class CategoryService {
     private CategoryMapper categoryMapper;
 
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-        Category user = categoryMapper.categoryDTOToCategory(categoryDTO);
+        Category category = categoryMapper.categoryDTOToCategory(categoryDTO);
 
-        categoryRepository.save(user);
-        return categoryMapper.categoryToCategoryDTO(user);
+        categoryRepository.save(category);
+        return categoryMapper.categoryToCategoryDTO(category);
     }
 
     public CategoryDTO getCategoryById(Long categoryId) {
@@ -42,16 +42,28 @@ public class CategoryService {
         Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
         return optionalCategory.map(category -> {
             // Update user fields with values from userDTO
-            category.setName(categoryDTO.getName());
+            category.setTitle(categoryDTO.getTitle());
 
             categoryRepository.save(category);
             return categoryMapper.categoryToCategoryDTO(category);
         }).orElse(null);
     }
 
-    public List<CategoryDTO> getCategryAll() {
-        return categoryRepository.findAll().stream().map(CategoryMapper.INSTANCE::categoryToCategoryDTO)
-                .collect(Collectors.toList());
+    public List<CategoryDTO> getCategoryAll() {
+        List<Category> categories = categoryRepository.findAll();
+
+        List<CategoryDTO> categoryDTOs = categories.stream()
+                .map(category -> {
+            CategoryDTO categoryDTO = new CategoryDTO();
+            categoryDTO.setId(category.getId());
+            categoryDTO.setTitle(category.getTitle());
+            categoryDTO.setDescription(category.getDescription());
+            categoryDTO.setThemeClass(category.getThemeClass());
+            categoryDTO.setImageKey(category.getImageKey());
+            return categoryDTO;
+        }).toList();
+        return categoryDTOs;
+
     }
 
 
