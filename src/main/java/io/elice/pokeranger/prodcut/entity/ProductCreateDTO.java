@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ProductCreateDTO {
+    @NotNull
+    private Long userId;
 
     @NotNull(message = "Category ID 는 필수 입력란 입니다.")
     private Long categoryId;

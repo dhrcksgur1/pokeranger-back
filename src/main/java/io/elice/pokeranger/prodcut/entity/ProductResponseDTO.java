@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ProductResponseDTO {
     private Long id; //postman 테스트 용 추후 삭제
+    private String userName;
+    private Long categoryId;
     private String name;
     private Long price;
     private Long stock;
