@@ -117,7 +117,8 @@ public class UserService {
     public Long checkPasswordHash(UserDTO checkUserDTO) {
 
         UserDTO getUserDTO = getUserById(checkUserDTO.getId());
-        if( getUserDTO.getPasswordHash() != passwordEncoder.encode(checkUserDTO.getPasswordHash()))
+
+        if(passwordEncoder.matches(checkUserDTO.getPasswordHash(), getUserDTO.getPasswordHash()) == false)
         {
             throw new RuntimeException("password is not match");
 
