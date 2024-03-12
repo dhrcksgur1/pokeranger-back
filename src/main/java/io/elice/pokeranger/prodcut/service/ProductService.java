@@ -44,26 +44,6 @@ public class ProductService {
     }
 
     //CREATE
-//    @Transactional
-//    public ProductResponseDTO createProduct(ProductRequestDTO productDto) {
-//        User user = userRepository.findById(productDto.getUserId())
-//                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.USER_NOT_FOUND));
-//        Category category = categoryRepository.findById(productDto.getCategoryId())
-//                .orElseThrow(() -> new ServiceLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
-//
-//        Product product = new Product(
-//                user,
-//                category,
-//                productDto.getName(),
-//                productDto.getPrice(),
-//                productDto.getStock(),
-//                productDto.getDescription(),
-//                productDto.getImages()
-//        );
-//        productRepository.save(product);
-//        return productMapper.productToDto(product);
-//    }
-
     @Transactional
     public ProductResponseDTO createProduct(ProductCreateDTO productDto) {
         User user = userRepository.findById(productDto.getUserId())
@@ -84,8 +64,6 @@ public class ProductService {
         productRepository.save(product);
         return productMapper.productToDto(product);
     }
-
-
 
     // Read All Products
     public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
@@ -111,7 +89,6 @@ public class ProductService {
         Page<Product> products = productRepository.findByCategoryId(categoryId, pageable);
         return products.map(productMapper::productToDto);
     }
-
 
     //UPDATE
     @Transactional//수정코드
