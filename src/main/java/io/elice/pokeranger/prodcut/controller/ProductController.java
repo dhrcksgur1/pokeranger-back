@@ -92,7 +92,7 @@ public class ProductController {
 
     //UPADTE
     @Operation(summary = "등록 물품 수정 기능", description = "등록된 물품 정보 수정")
-    @PutMapping("/{id}") //수정코드
+    @PatchMapping("/{id}") //수정코드
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id,@Validated @RequestBody ProductRequestDTO productRequestDTO) {
         ProductResponseDTO updatedProduct = productService.updateProduct(id, productRequestDTO);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
