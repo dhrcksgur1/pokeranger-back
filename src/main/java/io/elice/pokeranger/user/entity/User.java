@@ -1,6 +1,8 @@
 package io.elice.pokeranger.user.entity;
 
 import io.elice.pokeranger.global.enums.UserType;
+import io.elice.pokeranger.order.entity.Orders;
+import io.elice.pokeranger.prodcut.entity.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,6 +70,14 @@ public User(UserType type, String email, String PasswordHash, String name, Strin
         this.phoneNumber = PhoneNumber;
         this.address = Address;
     }
+
+    @OneToMany(mappedBy = "user")
+    private List<Product> userProductList;
+
+
+    @OneToMany(mappedBy = "user")
+    private List<Orders> userOrdersList;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 

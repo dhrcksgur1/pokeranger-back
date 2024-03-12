@@ -81,7 +81,22 @@ public class UserService {
 
     public void deleteUser(Long userId) {
         if (userRepository.existsById(userId)) {
-            userRepository.deleteById(userId);
+            /// 프로덕트와 오더 에 부모를 null 처리
+            Optional<User> user = userRepository.findById(userId);
+            if(user.isPresent())
+            {
+                user.get().getUserProductList().stream().forEach(product -> {
+                    product.setUser(null);
+                });
+
+                user.get().getUserOrdersList().stream().forEach(orders -> {
+                    orders.setUser(null);
+                });
+
+                userRepository.deleteById(userId);
+            }
+
+
         } else {
             throw new RuntimeException("User with ID " + userId + " not found");
         }

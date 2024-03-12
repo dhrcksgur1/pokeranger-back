@@ -140,6 +140,8 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> deleteUser(@PathVariable(name = "userId") Long userId) {
         try {
+            // 캐스케이드 ?
+
             userService.deleteUser(userId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
