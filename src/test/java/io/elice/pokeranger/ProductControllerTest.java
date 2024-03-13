@@ -1,10 +1,14 @@
 package io.elice.pokeranger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.elice.pokeranger.category.entity.Category;
+import io.elice.pokeranger.category.repository.CategoryRepository;
+import io.elice.pokeranger.prodcut.entity.Product;
 import io.elice.pokeranger.prodcut.entity.ProductCreateDTO;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import io.elice.pokeranger.user.entity.User;
+import io.elice.pokeranger.user.repository.UserRepository;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -52,9 +56,60 @@ public class ProductControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    //1번
+//    @BeforeEach
+//    void setUp() {
+//        User user1 = new User();
+//        user1.setId(1L);
+//        userRepository.save(user1);
+//
+//        User user2 = new User();
+//        user2.setId(2L);
+//        userRepository.save(user2);
+//
+//        Category category1 = new Category();
+//        category1.setId(1L);
+//        categoryRepository.save(category1);
+//
+//        Category category2 = new Category();
+//        category2.setId(2L);
+//        categoryRepository.save(category2);
+//    }
+//
+//    @AfterEach
+//    void cleanUp() {
+//        userRepository.deleteAll();
+//        categoryRepository.deleteAll();
+//    }
+
+    //2번
+//    @BeforeAll
+//    static void setup() {
+//        // 테스트를 위한 사용자와 카테고리 데이터 세팅
+//        userRepository.save(new User("dd", "dd",""));
+//        userRepository.save(new User(2L, "User B"));
+//        categoryRepository.save(new Category(1L, "Category A"));
+//        categoryRepository.save(new Category(2L, "Category B"));
+//    }
+//
+//    @AfterAll
+//    static void cleanup() {
+//        // 테스트가 끝난 후 데이터 정리
+//        userRepository.deleteAll();
+//        categoryRepository.deleteAll();
+//    }
+
     @ParameterizedTest
     @MethodSource("productDataset")
     void createProductParameterizedTest(ProductCreateDTO productCreateDTO, String expectedName, Long expectedPrice) throws Exception {
+
+
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productCreateDTO)))
@@ -71,7 +126,7 @@ public class ProductControllerTest {
         return Stream.of(
                 Arguments.of(new ProductCreateDTO(1L, 1L, "Product A", "Description for Product A", "image1.jpg", 10L, 100L), "Product A", 100L),
                 Arguments.of(new ProductCreateDTO(2L, 2L, "Product B", "Description for Product B", "image2.jpg", 20L, 200L), "Product B", 200L),
-                Arguments.of(new ProductCreateDTO(3L, 3L, "Product C", "Description for Product C", "image3.jpg", 30L, 300L), "Product C", 300L)
+                Arguments.of(new ProductCreateDTO(2L, 2L, "Product C", "Description for Product C", "image3.jpg", 30L, 300L), "Product C", 300L)
         );
     }
 
