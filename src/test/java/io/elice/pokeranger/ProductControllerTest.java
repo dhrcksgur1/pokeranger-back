@@ -103,7 +103,7 @@ public class ProductControllerTest {
     @Test
     public void getProductByUserId_ShouldReturnProducts() throws Exception {
         Long userId = 1L; // Example user ID
-        mockMvc.perform(get("/user/{userId}", userId)
+        mockMvc.perform(get("/products/user/{userId}", userId)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect((ResultMatcher) jsonPath("$.content").isArray())
@@ -113,7 +113,7 @@ public class ProductControllerTest {
     @Test
     public void getProductByCategoryId_ShouldReturnProducts() throws Exception {
         Long categoryId = 1L; // Example category ID
-        mockMvc.perform(get("/category/{categoryId}", categoryId)
+        mockMvc.perform(get("/products/category/{categoryId}", categoryId)
                         .param("page", "0")
                         .param("size", "10")
                         .accept(MediaType.APPLICATION_JSON))
