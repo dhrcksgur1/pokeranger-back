@@ -1,15 +1,10 @@
 package io.elice.pokeranger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.elice.pokeranger.prodcut.controller.ProductController;
 import io.elice.pokeranger.prodcut.entity.ProductCreateDTO;
-import io.elice.pokeranger.prodcut.entity.ProductRequestDTO;
 import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
-import io.elice.pokeranger.prodcut.service.ProductService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
