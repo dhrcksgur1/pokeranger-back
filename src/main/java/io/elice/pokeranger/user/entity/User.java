@@ -51,7 +51,7 @@ public class User implements UserDetails {
 
     @CreatedDate
     @Column
-    private  Date createdAt ;
+    private Date createdAt ;
 
     @Column
     @LastModifiedDate
@@ -60,7 +60,6 @@ public class User implements UserDetails {
     @Column
     private Date deletedAt= new Date(0);;
     public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-
     }
 public User(UserType type, String email, String PasswordHash, String name, String PhoneNumber, AddressDTO Address) {
         this.type = type;

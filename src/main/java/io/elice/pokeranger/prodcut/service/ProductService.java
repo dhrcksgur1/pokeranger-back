@@ -79,7 +79,11 @@ public class ProductService {
     public ProductResponseDTO findProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
-        return productMapper.productToDto(product);
+        ProductResponseDTO productResponseDTO = productMapper.productToDto(product);
+        productResponseDTO.setUserId(product.getUser().getId());
+        productResponseDTO.setUserName(product.getUser().getName());
+
+        return productResponseDTO;
     }
 
     // Read Products by UserID
