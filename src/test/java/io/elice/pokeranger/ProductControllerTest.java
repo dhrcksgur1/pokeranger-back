@@ -1,18 +1,202 @@
 package io.elice.pokeranger;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.elice.pokeranger.category.entity.Category;
+import io.elice.pokeranger.category.repository.CategoryRepository;
+import io.elice.pokeranger.prodcut.entity.Product;
+import io.elice.pokeranger.prodcut.entity.ProductCreateDTO;
+import io.elice.pokeranger.prodcut.entity.ProductResponseDTO;
+import io.elice.pokeranger.user.entity.User;
+import io.elice.pokeranger.user.repository.UserRepository;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
-//@SpringBootTest
-//@AutoConfigureMockMvc
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class ProductControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    //1번
+//    @BeforeEach
+//    void setUp() {
+//        User user1 = new User();
+//        user1.setId(1L);
+//        userRepository.save(user1);
+//
+//        User user2 = new User();
+//        user2.setId(2L);
+//        userRepository.save(user2);
+//
+//        Category category1 = new Category();
+//        category1.setId(1L);
+//        categoryRepository.save(category1);
+//
+//        Category category2 = new Category();
+//        category2.setId(2L);
+//        categoryRepository.save(category2);
+//    }
+//
+//    @AfterEach
+//    void cleanUp() {
+//        userRepository.deleteAll();
+//        categoryRepository.deleteAll();
+//    }
+
+    //2번
+//    @BeforeAll
+//    static void setup() {
+//        // 테스트를 위한 사용자와 카테고리 데이터 세팅
+//        userRepository.save(new User("dd", "dd",""));
+//        userRepository.save(new User(2L, "User B"));
+//        categoryRepository.save(new Category(1L, "Category A"));
+//        categoryRepository.save(new Category(2L, "Category B"));
+//    }
+//
+//    @AfterAll
+//    static void cleanup() {
+//        // 테스트가 끝난 후 데이터 정리
+//        userRepository.deleteAll();
+//        categoryRepository.deleteAll();
+//    }
+
+    @ParameterizedTest
+    @MethodSource("productDataset")
+    void createProductParameterizedTest(ProductCreateDTO productCreateDTO, String expectedName, Long expectedPrice) throws Exception {
+
+
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productCreateDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    ProductResponseDTO response = objectMapper.readValue(responseBody, ProductResponseDTO.class);
+                    Assertions.assertEquals(expectedName, response.getName());
+                    Assertions.assertEquals(expectedPrice, response.getPrice());
+                });
+    }
+
+    public static Stream<Arguments> productDataset() {
+        return Stream.of(
+                Arguments.of(new ProductCreateDTO(1L, 1L, "Product A", "Description for Product A", "image1.jpg", 10L, 100L), "Product A", 100L),
+                Arguments.of(new ProductCreateDTO(2L, 2L, "Product B", "Description for Product B", "image2.jpg", 20L, 200L), "Product B", 200L),
+                Arguments.of(new ProductCreateDTO(2L, 2L, "Product C", "Description for Product C", "image3.jpg", 30L, 300L), "Product C", 300L)
+        );
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0, 5",
+            "1, 10",
+            "2, 3"
+    })
+    void getAllProductsPaged(int page, int size) throws Exception {
+        mockMvc.perform(get("/products?page=" + page + "&size=" + size))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.content", hasSize(lessThanOrEqualTo(size))));
+    }
+
+    @Test
+    void getProductByIdTest() throws Exception {
+        Long productId = 1L; // Assuming this product exists
+        mockMvc.perform(get("/products/" + productId))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.id").value(productId));
+    }
+
+    @Test
+    public void getProductByUserId_ShouldReturnProducts() throws Exception {
+        Long userId = 1L; // Example user ID
+        mockMvc.perform(get("/products/user/{userId}", userId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.content").isArray())
+                .andExpect((ResultMatcher) jsonPath("$.content[0].userId").value(userId));
+    }
+
+    @Test
+    public void getProductByCategoryId_ShouldReturnProducts() throws Exception {
+        Long categoryId = 1L; // Example category ID
+        mockMvc.perform(get("/products/category/{categoryId}", categoryId)
+                        .param("page", "0")
+                        .param("size", "10")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.content").isArray())
+                .andExpect((ResultMatcher) jsonPath("$.content[0].categoryId").value(categoryId));
+    }
+
+
+
+    @ParameterizedTest
+    @MethodSource("updateProductDataset")
+    void updateProductParameterizedTest(Long productId, ProductCreateDTO updateDto, String expectedName) throws Exception {
+        mockMvc.perform(patch("/products/" + productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.name").value(expectedName));
+    }
+
+    static Stream<Arguments> updateProductDataset() {
+        return Stream.of(
+                Arguments.of(1L, new ProductCreateDTO(1L, 1L, "Updated Product A", "Updated Description", "image1_updated.jpg", 15L, 150L), "Updated Product A")
+        );
+    }
+
+    @Test
+    void deleteProductTest() throws Exception {
+        Long productId = 1L; // Assuming this product can be deleted
+        mockMvc.perform(delete("/products/" + productId))
+                .andExpect(status().isNoContent());
+    }
+}
 //class ProductControllerTest {
 //
 //    @Autowired
@@ -29,10 +213,6 @@ import java.util.stream.Stream;
 //        return new ProductResponseDTO(1L, "Sample Product", 10000L, 10L, "Sample Description", "Sample Image");
 //    }
 //
-//    @BeforeEach
-//    public void setup() {
-//        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-//    }
 //  // 테스트 실패로 jar 파일 생성 못하여서 주석처리 하였습니다
 //    @Test
 //    void createProduct() throws Exception {
@@ -79,51 +259,30 @@ import java.util.stream.Stream;
 //                .andExpect(jsonPath("$.content[0].name").value(productList.get(0).getName()));
 //    }
 //
-//
+//    //    void parameterizedTest(int input, int input2, String expectedOutput) {
+////        int i = input + input2;
+////
+////        Assertions.assertEquals(String.valueOf(i), expectedOutput);
+////    }
+//    @ParameterizedTest
+//    @MethodSource("dataset")
+//    void testProductApi(String path, HttpMethod method, Object requestDTO, Class<?> responseClass, String jsonPath, Object expectedValue) throws Exception {
+//        mockMvc.perform(MockMvcRequestBuilders.request(method, path)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestDTO != null ? objectMapper.writeValueAsString(requestDTO) : "{}"))
+//                .andExpect(status().isOk())
+//                .andExpect((ResultMatcher) jsonPath(jsonPath).value(expectedValue));
+//    }
+//    public static Stream<Arguments> dataset() {
+//        return Stream.of(
+//                Arguments.of("/products", HttpMethod.POST, new ProductCreateDTO(2L, 2L,"Sample Product", "Sample Description", "Sample Image", 1L, 2L), ProductResponseDTO.class, "$.name", "Expected Product Name"),
+//                Arguments.of("/products?page=0&size=10", HttpMethod.GET, null, String.class, "$.content[0].name", "Sample Product"),
+//                Arguments.of("/products/user/{userId}", HttpMethod.GET, null, String.class, "$.content[0].name", "Sample Product", 1L),
+//                Arguments.of("/products?page=0&size=10", HttpMethod.GET, null, Page.class, "$.content.size()", "Expected Number of Products"),
+//                Arguments.of("/products/{id}", HttpMethod.GET, null, ProductResponseDTO.class, "$.id", "Expected Product ID", 1L),
+//                Arguments.of("/products//user/{userId}", HttpMethod.GET, null, Page.class, "$.content[0].userId", "Expected User ID", 1L),
+//                Arguments.of("/products/{id}", HttpMethod.PUT, new ProductRequestDTO(/* constructor arguments */), ProductResponseDTO.class, "$.name", "Updated Product Name", 1),
+//                Arguments.of("/products/{id}", HttpMethod.DELETE, null, Void.class, null, null, 1)
+//                );
+//    }
 //}
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductControllerTest {
-
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    private String baseUrl;
-
-    @BeforeEach
-    public void setUp() {
-        this.baseUrl = "http://localhost:" + port;
-    }
-
-    @ParameterizedTest
-    @MethodSource("dataset")
-    void parameterizedTest(TestArguments arguments) {
-
-        // TODO 빌드 실패로 아래 2줄 주석처리
-        //ResponseEntity<?> response = arguments.executeRequest(restTemplate.getRestTemplate(), baseUrl);
-       // assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
-
-        // Here, you might want to parse the response body and assert the specific fields
-        // based on `arguments.getJsonPath()` and `arguments.getExpectedValue()`
-    }
-
-    public static Stream<TestArguments> dataset() {
-        return Stream.of(
-                // TODO 빌드 실패로 아래 1줄 주석처리
-             //   TestArguments.of("/products", HttpMethod.POST, new ProductCreateDTO(2L, "Sample Product", "Sample Description", "Sample Image", 1L, 2L), ProductResponseDTO.class, "$.name", "Sample Product"),
-                TestArguments.of("/products?page=0&size=10", HttpMethod.GET, null, String.class, "$.content[0].name", "Sample Product"),
-                TestArguments.of("/products/user/{userId}", HttpMethod.GET, null, String.class, "$.content[0].name", "Sample Product", 1L)
-
-//                TestArguments.of("/products", HttpMethod.POST, new ProductCreateDTO(2L, "Sample Product", "Sample Description", "Sample Image", 1L, 2L), ProductResponseDTO.class, "$.name", "Expected Product Name"),
-//                TestArguments.of("/products?page=0&size=10", HttpMethod.GET, null, Page.class, "$.content.size()", "Expected Number of Products"),
-//                TestArguments.of("/products/{id}", HttpMethod.GET, null, ProductResponseDTO.class, "$.id", "Expected Product ID", 1L),
-//                TestArguments.of("/products//user/{userId}", HttpMethod.GET, null, Page.class, "$.content[0].userId", "Expected User ID", 1L),
-//                TestArguments.of("/products//category/{categoryId}?page=0&size=10", HttpMethod.GET, null, Page.class, "$.content[0].name", "Sample Product", 1),
-//                TestArguments.of("/products/{id}", HttpMethod.PUT, new ProductRequestDTO(/* constructor arguments */), ProductResponseDTO.class, "$.name", "Updated Product Name", 1),
-//                TestArguments.of("/products/{id}", HttpMethod.DELETE, null, Void.class, null, null, 1)
-        );
-    }
-}
