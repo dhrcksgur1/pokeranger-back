@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,14 +38,115 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static java.lang.reflect.Array.get;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.http.RequestEntity.post;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@SpringBootTest
-//@AutoConfigureMockMvc
+
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class ProductControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @ParameterizedTest
+    @MethodSource("productDataset")
+    void createProductParameterizedTest(ProductCreateDTO productCreateDTO, String expectedName, Long expectedPrice) throws Exception {
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productCreateDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    ProductResponseDTO response = objectMapper.readValue(responseBody, ProductResponseDTO.class);
+                    Assertions.assertEquals(expectedName, response.getName());
+                    Assertions.assertEquals(expectedPrice, response.getPrice());
+                });
+    }
+
+    public static Stream<Arguments> productDataset() {
+        return Stream.of(
+                Arguments.of(new ProductCreateDTO(1L, 1L, "Product A", "Description for Product A", "image1.jpg", 10L, 100L), "Product A", 100L),
+                Arguments.of(new ProductCreateDTO(2L, 2L, "Product B", "Description for Product B", "image2.jpg", 20L, 200L), "Product B", 200L),
+                Arguments.of(new ProductCreateDTO(3L, 3L, "Product C", "Description for Product C", "image3.jpg", 30L, 300L), "Product C", 300L)
+        );
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0, 5",
+            "1, 10",
+            "2, 3"
+    })
+    void getAllProductsPaged(int page, int size) throws Exception {
+        mockMvc.perform(get("/products?page=" + page + "&size=" + size))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.content", hasSize(lessThanOrEqualTo(size))));
+    }
+
+    @Test
+    void getProductByIdTest() throws Exception {
+        Long productId = 1L; // Assuming this product exists
+        mockMvc.perform(get("/products/" + productId))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.id").value(productId));
+    }
+
+    @Test
+    public void getProductByUserId_ShouldReturnProducts() throws Exception {
+        Long userId = 1L; // Example user ID
+        mockMvc.perform(get("/user/{userId}", userId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.content").isArray())
+                .andExpect((ResultMatcher) jsonPath("$.content[0].userId").value(userId));
+    }
+
+    @Test
+    public void getProductByCategoryId_ShouldReturnProducts() throws Exception {
+        Long categoryId = 1L; // Example category ID
+        mockMvc.perform(get("/category/{categoryId}", categoryId)
+                        .param("page", "0")
+                        .param("size", "10")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.content").isArray())
+                .andExpect((ResultMatcher) jsonPath("$.content[0].categoryId").value(categoryId));
+    }
+
+
+
+    @ParameterizedTest
+    @MethodSource("updateProductDataset")
+    void updateProductParameterizedTest(Long productId, ProductCreateDTO updateDto, String expectedName) throws Exception {
+        mockMvc.perform(patch("/products/" + productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.name").value(expectedName));
+    }
+
+    static Stream<Arguments> updateProductDataset() {
+        return Stream.of(
+                Arguments.of(1L, new ProductCreateDTO(1L, 1L, "Updated Product A", "Updated Description", "image1_updated.jpg", 15L, 150L), "Updated Product A")
+        );
+    }
+
+    @Test
+    void deleteProductTest() throws Exception {
+        Long productId = 1L; // Assuming this product can be deleted
+        mockMvc.perform(delete("/products/" + productId))
+                .andExpect(status().isNoContent());
+    }
+}
 //class ProductControllerTest {
 //
 //    @Autowired
@@ -107,14 +209,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //                .andExpect(jsonPath("$.content[0].name").value(productList.get(0).getName()));
 //    }
 //
+//    //    void parameterizedTest(int input, int input2, String expectedOutput) {
+////        int i = input + input2;
+////
+////        Assertions.assertEquals(String.valueOf(i), expectedOutput);
+////    }
 //    @ParameterizedTest
 //    @MethodSource("dataset")
-//    void parameterizedTest(int input, int input2, String expectedOutput) {
-//        int i = input + input2;
-//
-//        Assertions.assertEquals(String.valueOf(i), expectedOutput);
+//    void testProductApi(String path, HttpMethod method, Object requestDTO, Class<?> responseClass, String jsonPath, Object expectedValue) throws Exception {
+//        mockMvc.perform(MockMvcRequestBuilders.request(method, path)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestDTO != null ? objectMapper.writeValueAsString(requestDTO) : "{}"))
+//                .andExpect(status().isOk())
+//                .andExpect((ResultMatcher) jsonPath(jsonPath).value(expectedValue));
 //    }
-//
 //    public static Stream<Arguments> dataset() {
 //        return Stream.of(
 //                Arguments.of("/products", HttpMethod.POST, new ProductCreateDTO(2L, 2L,"Sample Product", "Sample Description", "Sample Image", 1L, 2L), ProductResponseDTO.class, "$.name", "Expected Product Name"),
@@ -128,49 +236,3 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //                );
 //    }
 //}
-
-
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(ProductController.class)
-class ProductControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    private static ProductResponseDTO buildProductResponseDTO() {
-        return new ProductResponseDTO(1L, "cks", 100L, 10L, 1L,"d","Sample Description", 1L, "Sample Image");
-    }
-
-    @ParameterizedTest
-    @MethodSource("testDataProvider")
-    void testProductApi(String path, HttpMethod method, Object requestDTO, Class<?> responseClass, String jsonPath, Object expectedValue) throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.request(method, path)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestDTO != null ? objectMapper.writeValueAsString(requestDTO) : "{}"))
-                .andExpect(status().isOk())
-                .andExpect((ResultMatcher) jsonPath(jsonPath).value(expectedValue));
-    }
-
-    static Stream<Arguments> testDataProvider() {
-        ProductCreateDTO createDTO = new ProductCreateDTO();
-        createDTO.setCategoryId(2L);
-        createDTO.setName("Sample Product");
-        createDTO.setPrice(10000L);
-        createDTO.setStock(10L);
-        createDTO.setDescription("Sample Description");
-        createDTO.setImages("Sample Image");
-
-        // 요청 DTO 준비
-        ProductCreateDTO requestDTO = createDTO;
-
-        List<ProductResponseDTO> productList = Collections.singletonList(buildProductResponseDTO());
-
-        return Stream.of(
-                Arguments.of("/products", HttpMethod.POST, requestDTO, ProductResponseDTO.class, "$.name", "Sample Product"),
-                Arguments.of("/products?page=0&size=10", HttpMethod.GET, null, PageImpl.class, "$.content[0].name", "Sample Product")
-        );
-    }
-}

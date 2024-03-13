@@ -28,13 +28,6 @@ public class ProductController {
     }
 
     //CREATE
-//    @Operation(summary = "물품 등록기능", description = "물품 등록")
-//    @PostMappingㅔ
-//    public ResponseEntity<ProductResponseDTO> createProduct(@Validated @RequestBody ProductRequestDTO productRequestDTO) {
-//        ProductResponseDTO createdProduct = productService.createProduct(productRequestDTO);
-//        return ResponseEntity.ok(createdProduct);
-//    }
-
     @Operation(summary = "물품 등록기능", description = "물품 등록")
     @PostMapping
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
@@ -69,13 +62,7 @@ public class ProductController {
 
     // READ BY CategoryID
     @Operation(summary = "물품 조회 기능", description = "카테고리 고유 id로 검색")
-//    @GetMapping("/category/{categoryId}")
-//    public ResponseEntity<Page<ProductResponseDTO>> getProductByCategoryId(@PathVariable Long categoryId, @PageableDefault(size = 10) Pageable pageable) {
-//        Page<ProductResponseDTO> products = productService.getProductsByCategoryId(categoryId, pageable);
-//        return ResponseEntity.ok(products);
-//    }
-
-        @GetMapping("/category/{categoryId}")
+    @GetMapping("/category/{categoryId}")
     public ResponseEntity<Page<ProductResponseDTO>> getProductByCategoryId(@PathVariable Long categoryId,
                                                                            @RequestParam(defaultValue = "0") int page,
                                                                            @RequestParam(defaultValue = "10") int size) {

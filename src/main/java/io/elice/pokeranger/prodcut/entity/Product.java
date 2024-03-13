@@ -40,6 +40,8 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+
+
     public Product(User user, Category category ,String name, Long price,Long stock,String description,String images){
         this.user = user;
         this.category = category;
