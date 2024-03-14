@@ -58,7 +58,14 @@ public class User implements UserDetails {
     private  Date updatedAt = new Date(0);
 
     @Column
-    private Date deletedAt= new Date(0);;
+    private Date deletedAt= new Date(0);
+
+    @OneToMany(mappedBy = "user")
+    private List<Product> userProductList;
+
+    @OneToMany(mappedBy = "user")
+    private List<Orders> userOrdersList;
+
     public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
     }
 public User(UserType type, String email, String PasswordHash, String name, String PhoneNumber, AddressDTO Address) {
@@ -69,14 +76,6 @@ public User(UserType type, String email, String PasswordHash, String name, Strin
         this.phoneNumber = PhoneNumber;
         this.address = Address;
     }
-
-    @OneToMany(mappedBy = "user")
-    private List<Product> userProductList;
-
-
-    @OneToMany(mappedBy = "user")
-    private List<Orders> userOrdersList;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 

@@ -88,10 +88,10 @@ public class UserController {
     // Read
     @Operation(summary = "전체 회원 조회 ", description = "모든 user 정보 조회  ")
     @GetMapping
-    public ResponseEntity<Page<User>> getUserListForAdmin(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Page<UserDTO>> getUserListForAdmin(@RequestParam(defaultValue = "0") int page,
                                                           @RequestParam(defaultValue = "20") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<User> users = userService.getAll(pageRequest);
+        Page<UserDTO> users = userService.getAll(pageRequest);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 

@@ -3,6 +3,7 @@ package io.elice.pokeranger.user.service;
 import io.elice.pokeranger.global.enums.UserType;
 import io.elice.pokeranger.global.exception.ExceptionCode;
 import io.elice.pokeranger.global.exception.ServiceLogicException;
+import io.elice.pokeranger.order.entity.OrderResponseDTO;
 import io.elice.pokeranger.user.entity.*;
 import io.elice.pokeranger.user.mapper.UserMapper;
 import io.elice.pokeranger.user.repository.UserRepository;
@@ -85,7 +86,7 @@ public class UserService {
             Optional<User> user = userRepository.findById(userId);
             if(user.isPresent())
             {
-                user.get().getUserProductList().stream().forEach(product -> {
+                user.get().getUserProductList().forEach(product -> {
                     product.setUser(null);
                 });
 
@@ -101,10 +102,16 @@ public class UserService {
             throw new RuntimeException("User with ID " + userId + " not found");
         }
     }
-    public Page<User> getAll(Pageable pageable) {
 
-        return userRepository.findAll(pageable);
-    }
+public Page<UserDTO> getAll(Pageable pageable) {
+    Page<UserDTO> users;
+    Page<User> userPage = userRepository.findAll(pageable); // Fetching users from repository
+
+    // Mapping User to UserDTO and returning a Page<UserDTO>
+    users = userPage.map(user -> userMapper.userToUserDTO(user));
+
+    return users;
+}
 
     public User getUserPasswordHash(LoginDTO loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
@@ -133,7 +140,7 @@ public class UserService {
 
         UserDTO getUserDTO = getUserById(checkUserDTO.getId());
 
-        if(passwordEncoder.matches(checkUserDTO.getPasswordHash(), getUserDTO.getPasswordHash()) == false)
+        if(!passwordEncoder.matches(checkUserDTO.getPasswordHash(), getUserDTO.getPasswordHash()))
         {
             throw new RuntimeException("password is not match");
 
