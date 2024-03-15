@@ -99,18 +99,18 @@ public class UserController {
 
     @Operation(summary = "유저 정보 요청 ", description = "id 에 해당하는 유저 반환 ")
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable(name ="userId") Long userId) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId) {
         UserDTO userDTO = userService.getUserById(userId);
         return ResponseEntity.ok(userDTO);
     }
 
 
-    @Operation(summary="로그인 임시 요청" , description = "id 에 해당하는 유저 정보 반환 ")
-    @PostMapping("/{userId}/{password}")
-    public ResponseEntity<UserDTO> loginUser(@PathVariable(name = "userId") long userId, @PathVariable(name = "password" ) String password) {
-        UserDTO userDTO = userService.getUserById(userId);
-        return ResponseEntity.ok(userDTO);
-    }
+//    @Operation(summary="로그인 임시 요청" , description = "id 에 해당하는 유저 정보 반환 ")
+//    @PostMapping("/{userId}/{password}")
+//    public ResponseEntity<UserDTO> loginUser(@PathVariable long userId, @PathVariable String password) {
+//        UserDTO userDTO = userService.getUserById(userId);
+//        return ResponseEntity.ok(userDTO);
+//    }
 
 
     @Operation(summary="패스워드 체크 " , description = "유저의 패스워드 체크  ")
@@ -130,7 +130,7 @@ public class UserController {
 
     @Operation(summary="유저 정보 수정" , description = "id 에 해당하는 유저 정보 수정 ")
     @PatchMapping("/modify/{userId}")
-    public ResponseEntity<UserDTO> updateUserData(@PathVariable(name = "userId") Long userId, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUserData(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(userId, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
@@ -139,7 +139,7 @@ public class UserController {
 
     @Operation(summary="유저 삭제" , description = "id 에 해당하는 유저 삭제 ")
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Object> deleteUser(@PathVariable(name = "userId") Long userId) {
+    public ResponseEntity<Object> deleteUser(@PathVariable Long userId) {
         try {
             // 캐스케이드 ?
 
