@@ -37,7 +37,6 @@ public class UserService {
         user.setEmail(registerDTO.getEmail());
         user.setType(UserType.User);
 
-        user.setDeletedAt(new Date(0));
         user.setPasswordHash(passwordEncoder.encode(registerDTO.getPassword()));
 
         userRepository.save(user);

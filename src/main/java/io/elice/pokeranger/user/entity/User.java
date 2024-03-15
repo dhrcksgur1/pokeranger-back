@@ -1,5 +1,6 @@
 package io.elice.pokeranger.user.entity;
 
+import io.elice.pokeranger.global.entity.BaseEntity;
 import io.elice.pokeranger.global.enums.UserType;
 import io.elice.pokeranger.order.entity.Orders;
 import io.elice.pokeranger.prodcut.entity.Product;
@@ -24,7 +25,7 @@ import java.util.List;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,16 +50,16 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private  UserType type;
 
-    @CreatedDate
-    @Column
-    private Date createdAt ;
-
-    @Column
-    @LastModifiedDate
-    private  Date updatedAt = new Date(0);
-
-    @Column
-    private Date deletedAt= new Date(0);
+//    @CreatedDate
+//    @Column
+//    private Date createdAt ;
+//
+//    @Column
+//    @LastModifiedDate
+//    private  Date updatedAt = new Date(0);
+//
+//    @Column
+//    private Date deletedAt= new Date(0);
 
     @OneToMany(mappedBy = "user")
     private List<Product> userProductList;

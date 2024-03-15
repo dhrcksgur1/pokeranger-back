@@ -16,5 +16,4 @@ public class UserDTO {
     private UserType type;
     private Date createdAt;
     private Date updatedAt;
-    private Date deletedAt;
 }
