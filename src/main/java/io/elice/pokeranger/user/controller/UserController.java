@@ -8,6 +8,9 @@ import io.elice.pokeranger.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -88,10 +89,13 @@ public class UserController {
     // Read
     @Operation(summary = "전체 회원 조회 ", description = "모든 user 정보 조회  ")
     @GetMapping
-    public ResponseEntity<List<User>> getUserListForAdmin() {
-        List<User> users = userService.getAll();
+    public ResponseEntity<Page<UserDTO>> getUserListForAdmin(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "20") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<UserDTO> users = userService.getAll(pageRequest);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
 
     @Operation(summary = "유저 정보 요청 ", description = "id 에 해당하는 유저 반환 ")
     @GetMapping("/{userId}")
@@ -101,18 +105,32 @@ public class UserController {
     }
 
 
-    @Operation(summary="로그인 임시 요청" , description = "id 에 해당하는 유저 정보 반환 ")
-    @PostMapping("/{userId}/{password}")
-    public ResponseEntity<UserDTO> loginUser(@PathVariable(name = "userId") long userId, @PathVariable(name = "password" ) String password) {
-        UserDTO userDTO = userService.getUserById(userId);
-        return ResponseEntity.ok(userDTO);
-    }
+//    @Operation(summary="로그인 임시 요청" , description = "id 에 해당하는 유저 정보 반환 ")
+//    @PostMapping("/{userId}/{password}")
+//    public ResponseEntity<UserDTO> loginUser(@PathVariable long userId, @PathVariable String password) {
+//        UserDTO userDTO = userService.getUserById(userId);
+//        return ResponseEntity.ok(userDTO);
+//    }
 
+
+    @Operation(summary="패스워드 체크 " , description = "유저의 패스워드 체크  ")
+    @PostMapping("/password-check")
+    public ResponseEntity<Long> checkPassword(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.checkPasswordHash(userDTO));
+    }
     // put 맵핑
 
     @Operation(summary="유저 권한 수정" , description = "id 에 해당하는 유저 권한 수정 ")
-    @PutMapping("/{userId}/roles")
-    public ResponseEntity<UserDTO> updateUserRole(@PathVariable(name = "userId") Long userId, @RequestBody UserDTO userDTO) {
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long userId, @RequestBody UserTypeDTO userTypeDTO) {
+        UserDTO updatedUser = userService.userRoleChange(userId, userTypeDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+
+    @Operation(summary="유저 정보 수정" , description = "id 에 해당하는 유저 정보 수정 ")
+    @PatchMapping("/modify/{userId}")
+    public ResponseEntity<UserDTO> updateUserData(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(userId, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
@@ -121,8 +139,10 @@ public class UserController {
 
     @Operation(summary="유저 삭제" , description = "id 에 해당하는 유저 삭제 ")
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Object> deleteUser(@PathVariable(name = "userId") Long userId) {
+    public ResponseEntity<Object> deleteUser(@PathVariable Long userId) {
         try {
+            // 캐스케이드 ?
+
             userService.deleteUser(userId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {

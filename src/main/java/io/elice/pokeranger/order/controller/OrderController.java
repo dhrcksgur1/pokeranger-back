@@ -40,7 +40,7 @@ public class OrderController {
     public ResponseEntity<Page<OrderResponseDTO>> getOrderListForUser(@RequestParam Long userId,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size ,Sort.by("createdAt").descending());
         Page<OrderResponseDTO> orderList = orderService.getOrderList(userId, pageRequest);
         return new ResponseEntity<>(orderList, HttpStatus.OK);
     }

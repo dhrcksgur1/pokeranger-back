@@ -1,6 +1,8 @@
 package io.elice.pokeranger.category.entity;
 
+import io.elice.pokeranger.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,7 +12,8 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-public class Category {
+@AllArgsConstructor
+public class Category extends BaseEntity {
 
 
     @Id
@@ -19,14 +22,10 @@ public class Category {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String title;
 
-    @CreatedDate
-    private Date createdAt;
+    private String description;
+    private String themeClass;
+    private String imageKey;
 
-    private Date deletedAt;
-
-    public Category(String name)  {
-        this.name = name;
-    }
 }

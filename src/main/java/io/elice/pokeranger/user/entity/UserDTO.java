@@ -12,9 +12,8 @@ public class UserDTO {
     private String passwordHash;
     private String name;
     private String phoneNumber;
-    private String address;
+    private AddressDTO address;
     private UserType type;
     private Date createdAt;
     private Date updatedAt;
-    private Date deletedAt;
 }
