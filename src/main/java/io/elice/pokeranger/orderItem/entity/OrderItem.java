@@ -1,5 +1,6 @@
 package io.elice.pokeranger.orderItem.entity;
 
+import io.elice.pokeranger.global.entity.BaseEntity;
 import io.elice.pokeranger.order.entity.Orders;
 import io.elice.pokeranger.prodcut.entity.Product;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderItem {
+public class OrderItem extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

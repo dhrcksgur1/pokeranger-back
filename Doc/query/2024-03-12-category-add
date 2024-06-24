@@ -1,0 +1,29 @@
+-- 모든 프로덕트 삭제
+-- 모든 카테고리 삭제
+
+
+
+--회원정보 수정 관련 SQL 문
+ALTER TABLE `pokeranger`.`user`
+DROP COLUMN `address`;
+
+ALTER TABLE `pokeranger`.`category`
+DROP COLUMN `deleted_at`,
+CHANGE COLUMN `name` `title` VARCHAR(255) NOT NULL ;
+
+
+
+-- 카테고리 추가 관련 SQL 문
+ALTER TABLE `pokeranger`.`category`
+DROP COLUMN `deleted_at`,
+CHANGE COLUMN `name` `title` VARCHAR(255) NOT NULL ;
+
+
+-- nginx 설정파일 추가할 내용
+location /category/add {
+        try_files $uri $uri/ /category-add/category-add.html last;
+    }
+
+location /product/edit {
+        try_files $uri $uri/ /product-edit/product-edit.html last;
+    }

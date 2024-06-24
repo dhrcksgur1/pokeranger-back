@@ -37,23 +37,13 @@ public class Product extends BaseEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id", nullable = false  )
     private Category category;
 
-    //추가
-//    public Product(User user,Category category ,String name, Long price,Long stock,String description,String images){
-//        this.user = user;
-//        this.category = category;
-//        this.name = name;
-//        this.price = price;
-//        this.stock = stock;
-//        this.description = description;
-//        this.images = images;
-//    }
 
-    //추가
-    public Product(Category category ,String name, Long price,Long stock,String description,String images){
-        //this.user = user;
+
+    public Product(User user, Category category ,String name, Long price,Long stock,String description,String images){
+        this.user = user;
         this.category = category;
         this.name = name;
         this.price = price;
@@ -61,6 +51,4 @@ public class Product extends BaseEntity {
         this.description = description;
         this.images = images;
     }
-
-
 }
