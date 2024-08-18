@@ -47,104 +47,64 @@ https://www.youtube.com/watch?v=UP-HalHFP8U
 ![image](https://github.com/user-attachments/assets/dee0b98b-42a7-4c35-b03d-fb3dd406906f)
 
 <br></br>
+### 1. 유저
 - **회원 가입**
-![image](https://github.com/user-attachments/assets/013e5217-dac3-42a4-875b-266f5a8924c7)
-<br></br>
-
-- **회원 관리**
-![image](https://github.com/user-attachments/assets/d2c7882b-a69b-4f8f-b64f-76f0e71bb6bd)
-<br></br>
-
-- **제품 등록**
-- ![image](https://github.com/user-attachments/assets/4675f57b-d6f8-4ef7-af69-7231e39575ce)
-
-<br></br>
-- **제품 상세**
-![image](https://github.com/user-attachments/assets/535251a0-85c4-4a26-921d-f500bdcfc276)
-
-<br></br>
-
-<br></br>
-- **장바구니**
-![image](https://github.com/user-attachments/assets/4429f556-08b3-4ad2-a7a0-a1767a366e03)
-
-<br></br>
-
-- **주문/결제**
-![image](https://github.com/user-attachments/assets/c8dc423c-c3c0-4504-9a46-9b6fc7729969)
-<br></br>
-
-- **주문 조회**
-![image](https://github.com/user-attachments/assets/aaaa0b42-e41c-4dba-adf5-4e6692f94b67)
-<br></br>
-
-- **주문 관리**
-![image](https://github.com/user-attachments/assets/0a2e438a-aa5f-43dc-a1aa-4287bb457e9c)
-<br></br>
-
-## 기술 스택
-
-> 프론트엔드
-
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"> <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white"> <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=CSS3&logoColor=white">
-
-
-
-> 백엔드
-
-<img alt="springboot" src ="https://img.shields.io/badge/springboot-6DB33F.svg?&style=for-the-badge&logo=springboot&logoColor=white"/> <img alt="springsecurity" src ="https://img.shields.io/badge/springsecurity-6DB33F.svg?&style=for-the-badge&logo=springsecurity&logoColor=white"/>
-<img alt="mysql" src ="https://img.shields.io/badge/mysql-4479A1.svg?&style=for-the-badge&logo=mysql&logoColor=white"/> 
-
-> 서버
-
-<img alt="nginx" src ="https://img.shields.io/badge/nginx-009639.svg?&style=for-the-badge&logo=nginx&logoColor=white"/> <img alt="amazon aws" src ="https://img.shields.io/badge/amazon aws-232F3E.svg?&style=for-the-badge&logo=amazonaws&logoColor=white"/>
-<img alt="amazonrds" src ="https://img.shields.io/badge/amazonrds-527FFF.svg?&style=for-the-badge&logo=amazonrds&logoColor=white"/>
-<br></br>
-
-
-## 서비스 기능 명세
-### 1. 유저 기능
 > - Spring Security + JWT 기반 사용자 인증/인가
 > - 회원가입
 >    - 회원가입 폼의 입력 값에 대한 유효성 검사(ex. 이메일 형식, 비밀번호 불일치, 대소문자 구분 등)
 >    - 유효성 검사를 통과하고 제출 버튼을 누르면 회원에 대한 정보가 DB에 저장된다.
 > - 로그인
 >    - 로그인 폼의 입력 값에 대한 유효성 검사
-> - 회원 CRUD
+> - 회원 
 >    - 생성 - 사용자는 회원가입을 통해 계정을 생성할 수 있다.
 >    - 조회 - 사용자는 마이페이지에서 자신의 정보를 조회할 수 있다.
 >    - 수정 - 사용자는 마이페이지에서 자신의 정보를 수정할 수 있다.
 >    - 삭제 - 사용자는 마이페이지에서 회원 정보를 삭제(탈퇴)할 수 있다.
+> - 관리자
+>    - 조회 - 관리자는 모든 회원정보를 조회할 수 있다.
+>    - 수정 - 관리자는 모든 회원의 권한을 수정할 수 있다.
+>    - 삭제 - 관리자는 모든 회원의 정보를 삭제할 수 있다. 
 
-### 2. 모임 기능
+### 2. 카테고리 기능
+> - 장바구니 관련 데이터는 백엔드 DB가 아닌 프론트 브라우저에서 관리된다.
 > - 회원
->    - 모임 생성
->        - 생성한 회원은 모임장(id) 부여
->        - 생성시 모임카테고리, 선호태그 등 설정
->    - 조회
->        - 선호 카테고리 및 태그 사용자 검색어 기반 모임&검색어 조회
->        - 최신순, 인기순 기반 필터링
->        - 모임 참여인원 조회 가능
->    - 유저 신고 기능
-> - 모임장
->    - 모임 수정 가능
->    - 모임페이지 삭제 가능
+>    - 조회 - 회원은 카테고리 일부 또는 전부에 대한 목록을 조회가능하다.
+> - 관리자
+>    - 추가 - 관리자는 관리자 페이지를 통해 상품이 속할 카테고리를 결정할 수 있다.
+>    - 수정 - 관리자는 관리자 페이지를 통해 카테고리 관련 데이터를 수정할 수 있다.
+>    - 삭제 - 관리자는 관리자 페이지를 통해 카테고리 관련 데이터를 삭제할 수 있다.
 
-### 3.  챌린지 기능
-> - 유저가 챌린지 시작버튼을 통해 시작하는 방식이 아닌, 챌린지 시작 조건 만족 시 자동으로 시작되는 방식
-> - 유저의 챌린지 진행도가 챌린지 생성시 설정한 성공기준에 부합하면 성공 여부를 포함하는 컬럼 값인 isCompleted가 true로 바뀌게 되고 업적 트로피를 획득
+### 2. 상품
+> - 회원 & 관리자
+>    - 조회 - 페이지에 등록된 다양한 상품을 조회할 수 있다. 
+              특정 상품을 선택할 시 상품의 상세 정보를 조회할 수 있다.
+>    - 추가 - 유저 & 관리자는 관리 페이지를 통해 새로운 상품을 쇼핑몰에 등록할 수 있다.
+>    - 수정 - 유저 & 관리자는 관리자 페이지를 통해 상품 관련 데이터를 수정 할 수 있다.
+              단, 관리자는 모든 데이터 수정 할 수 있지만 유저는 자신의 상품만 수정 할 수 있다.
+>    - 삭제 - 유저 & 관리자는 관리자 페이지를 통해 상품 관련 데이터를 삭제 할 수 있다.
+              단, 관리자는 모든 데이터 삭제 할 수 있지만 유저는 자신의 상품만 삭제 할 수 있다.
 
-### 4.  인증 기능
-> - 산 정상 좌표값 기반으로 정상 및 등반높이 인증
-> - 등반한 정상 개수와 누적 높이를 기록
+### 3. 장바구니 기능
+> - 장바구니 관련 데이터는 백엔드 DB가 아닌 프론트 브라우저에서 관리된다.
+> - 회원
+>    - 조회 - 회원은 장바구니에 담긴 상품의 목록 및 가격을 확인할 수 있다.
+>    - 추가 - 회원은 상품을 장바구니에 추가할 수 있다.
+>    - 수정 - 회원은 장바구니에 담긴 상품의 수량을 수정할 수 있다.
+>    - 전체 삭제 - 회원은 장바구니의 특정 버튼을 통해 전체 상품을 단번에 제거할 수 있다.
+>    - 일부 삭제 - 회원은 장바구니의 일부 상품을 선택하여 제거할 수 있다.
 
-### 5. 랭킹
-> - 사용자가 인증한 데이터(높이, 완료한 챌린지)를 기반으로  점수를 산출하여 랭킹시스템 생성
+### 4. 주문 기능
+> - 장바구니 관련 데이터는 백엔드 DB가 아닌 프론트 브라우저에서 관리된다.
+> - 회원
+>    - 조회 - 회원은 마이페이지에서 자신의 주문 내역을 조회할 수 있다.
+>    - 추가 - 회원은 장바구니에 담긴 상품들을 주문할 수 있다.
+>    - 수정 - 회원은 주문 완료 후 배송 전까지 주문 정보를 수정할 수 있다.
+>    - 삭제 - 회원은 주문 완료 후 배송 전까지 주문을 취소할 수 있다.
+> - 관리자
+>    - 조회 - 관리자는 관리자 페이지에서 모든 회원들의 주문 내역을 조회할 수 있다.
+>    - 수정 - 관리자는 사용자의 주문 내역에서 배송 상태를 수정할 수 있다.
+>    - 삭제 - 관리자는 관리자 페이지에서 회원들의 주문 내역을 삭제할 수 있다. 
 
-### 6. 관리자(Admin)
-> - 회원관리 : 전체 회원 정보 조회(신고 내역 등) 및 회원 정보 삭제 기능
-> - 챌린지 관리 : 챌린지 업로드 및 삭제
-> - 카테고리 관리 : 카테고리 수정 및 삭제 기능
 <br></br>
 
 ## 역할분담
