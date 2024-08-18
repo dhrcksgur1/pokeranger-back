@@ -39,12 +39,51 @@ https://www.youtube.com/watch?v=UP-HalHFP8U
 ![image](https://github.com/user-attachments/assets/4ea74438-8249-4d41-a588-a016b0cb3b34)
 <br></br>
 
+- **마이 페이지**
+![스크린샷 2024-08-17 230017](https://github.com/user-attachments/assets/5fa96ac5-7cba-46c4-99bc-16adec5e7b1d)
+<br></br>
+
 - **카테고리 추가**
 ![image](https://github.com/user-attachments/assets/43c30a28-fc37-4db8-b997-1908fd3bb49e)
 <br></br>
 
+- **제품 추가**
+![스크린샷 2024-08-17 230912](https://github.com/user-attachments/assets/466e04fb-3e20-4548-a406-88c503ea1835)
+<br></br>
+
 - **게시판 메인화면**
+  
 ![image](https://github.com/user-attachments/assets/dee0b98b-42a7-4c35-b03d-fb3dd406906f)
+
+<br></br>
+
+- **제품 상세**
+  
+![스크린샷 2024-08-17 230950](https://github.com/user-attachments/assets/72706e4a-fc71-4132-b07c-e5fcd8818ae3)
+
+<br></br>
+
+- **장바구니**
+![스크린샷 2024-08-17 231549](https://github.com/user-attachments/assets/e606f1db-6775-4d86-8876-6e4a2f38d233)
+
+<br></br>
+
+- **주문 결제**
+![스크린샷 2024-08-17 231340](https://github.com/user-attachments/assets/0b301b17-4db6-4156-8967-8c3d08fe468d)
+
+<br></br>
+
+
+- **주문 조회**
+![스크린샷 2024-08-17 231707](https://github.com/user-attachments/assets/86e3a7d2-bfec-4e3c-98e6-3f8a10661875)
+
+
+<br></br>
+
+- **주문 관리**
+![스크린샷 2024-08-17 231840](https://github.com/user-attachments/assets/98d3b5c7-2cb8-427f-8a6a-ddda3d44e270)
+
+
 
 <br></br>
 ### 1. 유저
